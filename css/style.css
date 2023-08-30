@@ -181,10 +181,11 @@ main{
 mark::after{
     content: ' 🔗';
 }
-picture > img, picture > source{
+img{
    width: 100%;
    margin: auto; 
    display: block;
+   height: auto;
 }
 img{
     margin: auto; 
@@ -195,8 +196,6 @@ img{
 
 
 /*eventos*/
-
-
 .event {
     border: 1px solid #ddd;
     padding: 10px;

@@ -18,9 +18,9 @@
                 <button type="submit">Buscar </button>
             </form>
             <nav id="nav-direita">
-                <a href="index.html" target="_self">Home</a>
+                <a href="index.php" target="_self">Home</a>
                 <a href="descricao.html" target="_self">Descrição</a>
-                <a href="#">Entrar</a>
+                <a href="login.html">Entrar</a>
             </nav>
         </div>
     </header>
@@ -99,6 +99,266 @@
     -- Exclua os tipos de dados
     DROP DOMAIN IF EXISTS tipoCNPJ CASCADE;
     DROP DOMAIN IF EXISTS tipoCPF CASCADE;
+    DROP DOMAIN IF EXISTS tipoTelefone CASCADE;
+    DROP DOMAIN IF EXISTS tipoNumeroCartao CASCADE;
+    DROP DOMAIN IF EXISTS tipoPorcentagem CASCADE;
+    DROP DOMAIN IF EXISTS tipoValorPreco CASCADE;
+    DROP DOMAIN IF EXISTS tipoEmail CASCADE;
+    
+    -- Criando schema
+    CREATE SCHEMA plataformaCompraOnlineIngressos;
+    
+    -- Entrando no schema
+    set search_path to plataformaCompraOnlineIngressos;
+    
+    -- Criando tipos válidos:
+    CREATE DOMAIN tipoCNPJ AS CHAR(14);
+    
+    CREATE DOMAIN tipoCPF AS CHAR(11);
+    
+    CREATE DOMAIN tipoTelefone AS VARCHAR(11)
+        CHECK (VALUE ~ '^\d{9,11}$');
+    
+    CREATE DOMAIN tipoNumeroCartao AS CHAR(16);
+    
+    CREATE DOMAIN tipoPorcentagem AS INT
+        CHECK (VALUE >= 0 AND VALUE <= 100);
+    
+    CREATE DOMAIN tipoValorPreco AS DECIMAL(10, 2);
+    
+    CREATE DOMAIN tipoEmail AS VARCHAR(50)
+        CHECK (VALUE ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$');
+    
+    
+    -- Criando as tabelas:
+    CREATE TABLE redesSociais (
+        IDredesSociais SERIAL NOT NULL, 
+        nome VARCHAR(30) NOT NULL, 
+        linkSite VARCHAR(50) NOT NULL UNIQUE,
+        
+        PRIMARY KEY(IDredesSociais)
+    );
+    
+    CREATE TABLE plataforma (
+        website VARCHAR(50) NOT NULL, 
+        nome VARCHAR(30) NOT NULL DEFAULT 'Ticket Verse', 
+        taxaConveniencia tipoValorPreco NOT NULL DEFAULT 5.00, 
+        telefone tipoTelefone NOT NULL UNIQUE, 
+        email tipoEmail NOT NULL UNIQUE, 
+        IDredesSociais INT,
+        
+        PRIMARY KEY(website),
+        FOREIGN KEY(IDredesSociais) REFERENCES redesSociais(IDredesSociais)
+            ON DELETE SET NULL ON UPDATE CASCADE
+    );
+    
+    
+    CREATE TABLE administrador (
+        email tipoEmail NOT NULL, 
+        nome VARCHAR(30) NOT NULL DEFAULT 'root', 
+        senha VARCHAR(20) NOT NULL DEFAULT 'root', 
+        website VARCHAR(50) NOT NULL,
+        
+        PRIMARY KEY(email),
+        FOREIGN KEY(website) REFERENCES plataforma(website)
+            ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE organizador(
+        CNPJ tipoCNPJ NOT NULL, 
+        nome VARCHAR(30) NOT NULL, 
+        email tipoEmail NOT NULL UNIQUE, 
+        telefone tipoTelefone UNIQUE,
+        
+        PRIMARY KEY(CNPJ)
+    );
+    
+    CREATE TABLE categoriaEvento(
+        nomeCategoriaEvento VARCHAR(30) NOT NULL,
+        descricao TEXT NOT NULL,
+        
+        PRIMARY KEY(nomeCategoriaEvento)
+    );
+    
+    CREATE TABLE endereco(
+        IDendereco SERIAL NOT NULL, 
+        rua VARCHAR(30) NOT NULL, 
+        numero INT NOT NULL, 
+        cidade VARCHAR(30) NOT NULL, 
+        CEP VARCHAR(8) NOT NULL,
+        
+        PRIMARY KEY(IDendereco)
+    );
+    
+    CREATE TABLE localEvento(
+        nomeLocal VARCHAR(30) NOT NULL,
+        IDendereco INT NOT NULL,
+        detalhesDeAcesso TEXT NOT NULL DEFAULT 'Acesso pelo portão principal', 
+        capacidade INT NOT NULL,  
+        
+        PRIMARY KEY(nomeLocal, IDendereco),
+        FOREIGN KEY(IDendereco) REFERENCES endereco(IDendereco)
+    );
+    
+    
+    CREATE TABLE usuario(
+        CPF tipoCPF NOT NULL, 
+        nome VARCHAR(30) NOT NULL, 
+        email tipoEmail NOT NULL UNIQUE, 
+        senha VARCHAR(20) NOT NULL, 
+        IDendereco INT NOT NULL,
+        
+        PRIMARY KEY(CPF),
+        FOREIGN KEY(IDendereco) REFERENCES endereco(IDendereco)
+            ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE categoriaIngresso(
+        nomeCategoriaIngresso VARCHAR(30) NOT NULL, 
+        descricao TEXT, 
+        restricao TEXT NOT NULL DEFAULT 'Nenhuma restrição', 
+        desconto INT NOT NULL,
+        
+        PRIMARY KEY(nomeCategoriaIngresso)
+    );
+    
+    CREATE TABLE carrinhoCompras(
+        IDcarrinhoCompras SERIAL NOT NULL, 
+        total tipoValorPreco NOT NULL, 
+        CPF tipoCPF NOT NULL,
+        
+        PRIMARY KEY(IDcarrinhoCompras),
+        FOREIGN KEY(CPF) REFERENCES usuario(CPF)
+            ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE cupomDesconto(
+        codigoDesconto VARCHAR(20) NOT NULL,
+        porcentagemDesconto tipoPorcentagem NOT NULL, 
+        restricoes TEXT NOT NULL DEFAULT 'Nenhuma restrição', 
+        dataInicio TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        dataTermino TIMESTAMP NOT NULL,
+        
+        PRIMARY KEY(codigoDesconto)
+    );
+    
+    CREATE TABLE pagamento(
+        idPagamento SERIAL NOT NULL,
+        
+        PRIMARY KEY(idPagamento)
+    );
+    
+    
+    CREATE TABLE pix(
+        codigoPix VARCHAR(100) NOT NULL, 
+        IDpagamento INT NOT NULL,
+        
+        PRIMARY KEY(codigoPix),
+        FOREIGN KEY(IDpagamento) REFERENCES pagamento(idPagamento)
+            ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE boleto(
+        codigoBarras VARCHAR(100) NOT NULL, 
+        IDpagamento INT NOT NULL,
+        
+        PRIMARY KEY(codigoBarras),
+        FOREIGN KEY(IDpagamento) REFERENCES pagamento(idPagamento)
+            ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE cartao(
+        numeroCartao tipoNumeroCartao NOT NULL, 
+        nome VARCHAR(30) NOT NULL, 
+        dataVencimento DATE NOT NULL, 
+        CVV SMALLINT NOT NULL, 
+        IDpagamento INT NOT NULL,
+        
+        PRIMARY KEY(numeroCartao),
+        FOREIGN KEY(IDpagamento) REFERENCES pagamento(idPagamento)
+            ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE compra(
+        notaFiscal VARCHAR(44) NOT NULL, 
+        dataHoraCompra TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        valorFinal tipoValorPreco NOT NULL, 
+        IDcarrinhoCompras INT NOT NULL, 
+        codigoDesconto VARCHAR(20),
+        IDPagamento INT NOT NULL,
+        
+        PRIMARY KEY(notaFiscal),
+        FOREIGN KEY(IDcarrinhoCompras) REFERENCES carrinhoCompras(IDcarrinhoCompras),
+        FOREIGN KEY(codigoDesconto) REFERENCES cupomDesconto(codigoDesconto),
+        FOREIGN KEY(IDpagamento) REFERENCES pagamento(idPagamento)
+            ON UPDATE CASCADE
+    );
+    
+    
+    
+    CREATE TABLE evento(
+        IDevento SERIAL NOT NULL, 
+        titulo VARCHAR(30) NOT NULL, 
+        dataHoraEvento TIMESTAMP NOT NULL,  
+        descricao TEXT NOT NULL, 
+        duracao INT, 
+        classificacao VARCHAR(30) NOT NULL DEFAULT 'Livre', 
+        imagens VARCHAR(50), 
+        website VARCHAR(50) NOT NULL UNIQUE, 
+        CNPJ tipoCNPJ NOT NULL, 	
+        nomeCategoriaEvento VARCHAR(30) NOT NULL, 
+        nomeLocal VARCHAR(30) NOT NULL,
+        IDendereco INT NOT NULL,
+        
+        PRIMARY KEY(IDevento),
+        FOREIGN KEY(CNPJ) REFERENCES organizador(CNPJ)
+            ON UPDATE CASCADE,
+        FOREIGN KEY(nomeCategoriaEvento) REFERENCES categoriaEvento(nomeCategoriaEvento)
+            ON UPDATE CASCADE,
+        FOREIGN KEY(nomeLocal, IDendereco) REFERENCES localEvento(nomeLocal, IDendereco)
+    );
+    
+    CREATE TABLE avalia(
+        CPF tipoCPF NOT NULL,  
+        IDevento INT NOT NULL, 
+        comentario TEXT NOT NULL, 
+        nota SMALLINT NOT NULL, 
+        dataAvalia DATE NOT NULL DEFAULT CURRENT_DATE,
+        
+        PRIMARY KEY(CPF, IDevento),
+        FOREIGN KEY(CPF) REFERENCES usuario(CPF)
+            ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(IDevento) REFERENCES evento(IDevento)
+            ON DELETE CASCADE ON UPDATE CASCADE 
+    );
+    
+    CREATE TABLE favorita(
+        CPF tipoCPF NOT NULL, 
+        IDevento INT NOT NULL,  
+        dataAdicao DATE NOT NULL DEFAULT CURRENT_DATE,
+        
+        PRIMARY KEY(CPF, IDevento),
+        FOREIGN KEY(CPF) REFERENCES usuario(CPF)
+            ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(IDevento) REFERENCES evento(IDevento)
+            ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    
+    CREATE TABLE ingresso(
+        IDingresso SERIAL NOT NULL, 
+        numAssento INT NOT NULL, 
+        preco tipoValorPreco NOT NULL,
+        IDevento INT NOT NULL,  
+        IDcarrinhoCompras INT, 
+        nomeCategoriaIngresso VARCHAR(30) NOT NULL,
+        
+        FOREIGN KEY(IDevento) REFERENCES evento(IDevento)
+            ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(IDcarrinhoCompras) REFERENCES carrinhoCompras(IDcarrinhoCompras)
+            ON DELETE SET NULL ON UPDATE SET NULL,
+        FOREIGN KEY(nomeCategoriaIngresso) REFERENCES categoriaIngresso(nomeCategoriaIngresso)
+            ON UPDATE CASCADE
+    );                
             </pre>
 
             <h3> Script para Inserção de dados na tabela</h3>
