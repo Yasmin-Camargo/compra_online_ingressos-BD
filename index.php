@@ -36,13 +36,20 @@
             <?php
                 $host = "localhost";
                 $port = "5432 ";
-                $dbname = "aulabd1";
+                $dbname = "PlataformaIngressos";
                 $user = "postgres";
-                $password = "root";
+                $password = "admin";
 
                 try {
                     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    // Carregar o script SQL de inicialização
+                    $sqlScript = file_get_contents('script.sql');
+    
+                    // Executar o script SQL para inicializar as tabelas
+                    $pdo->exec($sqlScript);
+
                 } catch (PDOException $e) {
                     die("Erro na conexão: " . $e->getMessage());
                 }
@@ -60,11 +67,17 @@
                 <div class="event">
                     <h2><?php echo $row['titulo']; ?></h2>
                     <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
+
                     <p><?php echo $row['descricao']; ?></p>
                     <p>Duração: <?php echo $row['duracao']; ?> horas</p>
+                    
+                    <!-- Verifica se a coluna 'imagem' está definida e não está vazia -->
+                    <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
+                        <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
+                    <?php endif; ?>
+                    
                 </div>
                 <?php endforeach; ?>
-            </div>
             </div>
         </article>
     </main>
