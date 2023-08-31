@@ -55,27 +55,17 @@
             ?>
 
             <!-- CONSULTA COM BANCO DE DADOS -->
-            <table>
-                <tr>
-                    <th>idevento</th>
-                    <th>titulo</th>
-                    <th>datahoraevento</th>
-                    <th>descricao</th>
-                    <th>duracao</th>
-                    <th>classificacao</th>
-                </tr>
+            <div id="events-container">
                 <?php foreach ($results as $row): ?>
-                    <tr>
-                        <td><?php echo $row['idevento']; ?></td>
-                        <td><?php echo $row['titulo']; ?></td>
-                        <td><?php echo $row['datahoraevento']; ?></td>
-                        <td><?php echo $row['descricao']; ?></td>
-                        <td><?php echo $row['duracao']; ?></td>
-                        <td><?php echo $row['classificacao']; ?></td>
-                    </tr>
+                <div class="event">
+                    <h2><?php echo $row['titulo']; ?></h2>
+                    <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
+                    <p><?php echo $row['descricao']; ?></p>
+                    <p>Duração: <?php echo $row['duracao']; ?> horas</p>
+                </div>
                 <?php endforeach; ?>
-            </table>
-            
+            </div>
+            </div>
         </article>
     </main>
 

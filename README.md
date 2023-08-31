@@ -41,5 +41,5 @@ Agora, o site deve estar acessível com as configurações necessárias para int
     php -S localhost:8000
 3. Mantenha o terminal aberto e, no navegador, acesse:
     ```sh
-    http://localhost:8000/index.html
+    http://localhost:8000/index.php
 Isso permitirá o acesso ao site.
