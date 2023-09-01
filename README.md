@@ -43,3 +43,5 @@ Agora, o site deve estar acessível com as configurações necessárias para int
     ```sh
     http://localhost:8000/index.php
 Isso permitirá o acesso ao site.
+
+ATENÇÃO: No arquivo conexão.php colocar as informações do banco de dados configurado na própria máquina 

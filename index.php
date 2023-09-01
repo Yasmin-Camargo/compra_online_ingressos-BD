@@ -19,8 +19,8 @@
             </form>
             <nav id="nav-direita">
                 <a href="index.php" target="_self">Home</a>
-                <a href="descricao.html" target="_self">Descrição</a>
-                <a href="login.html">Entrar</a>
+                <a href="paginas/descricao.html" target="_self">Descrição</a>
+                <a href="paginas/login.html">Entrar</a>
             </nav>
         </div>
     </header>
@@ -34,31 +34,15 @@
             
             <!-- CONEXÃO COM O BANCO DE DADOS -->
             <?php
-                $host = "localhost";
-                $port = "5432 ";
-                $dbname = "PlataformaIngressos";
-                $user = "postgres";
-                $password = "admin";
+                include("paginas/conexao.php");
+                $conexao = conectarAoBanco();
 
-                try {
-                    $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
-                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                    // Carregar o script SQL de inicialização
-                    $sqlScript = file_get_contents('script.sql');
-    
-                    // Executar o script SQL para inicializar as tabelas
-                    $pdo->exec($sqlScript);
-
-                } catch (PDOException $e) {
-                    die("Erro na conexão: " . $e->getMessage());
-                }
-                
                 $query = "SELECT * FROM plataformaCompraOnlineIngressos.evento";
-                $statement = $pdo->prepare($query);
+                $statement = $conexao->prepare($query);
                 $statement->execute();
                 $results = 
                 $statement->fetchAll(PDO::FETCH_ASSOC);
+                $conexao = null;
             ?>
 
             <!-- CONSULTA COM BANCO DE DADOS -->

@@ -1,4 +1,5 @@
--- Excluir o esquema e seus objetos
+set search_path to plataformaCompraOnlineIngressos;
+/*-- Excluir o esquema e seus objetos
 DROP SCHEMA IF EXISTS plataformaCompraOnlineIngressos CASCADE;
 
 -- Exclua os tipos de dados
@@ -500,3 +501,5 @@ INSERT INTO evento (titulo, dataHoraEvento, descricao, duracao, website, imagens
 VALUES ('Palestra IA', '2023-10-15 18:30:00', 'Venha conhecer as aplicações da IA no mundo atual', 2, 'iaevent.com', 'https://www.tjto.jus.br/images/2023/08/17/eventogartnerhodirley.jpeg', '12345678901234', 'Palestra', 'Centro de Convenções', 1),
        ('Concerto de Música', '2023-11-20 19:00:00', 'Apresentação de músicas clássicas de renomados compositores', 3, 'concertoclassico.com', 'https://tribunadejundiai.com.br/wp-content/uploads/2023/08/orquestra-sinfonica-municipal-de-jundiai.jpg', '12345678901234', 'Concerto', 'Teatro Municipal', 1),
        ('Exposição de Arte', '2023-12-05 14:00:00', 'Explore uma variedade de obras de arte contemporânea', 4, 'artecontemporaneaexpo.com', 'https://ccs2.ufpel.edu.br/wp/wp-content/uploads/2023/04/Exposicao_Obras_restauradas_Palacio_Piratini_no_MALG_09_03_23-37-1.jpg', '12345678901234', 'Exposição de Arte', 'Galeria de Arte Moderna', 1);
+
+       */
