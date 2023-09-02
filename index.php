@@ -44,57 +44,60 @@
             <p>
                 Explore nosso site e comece a reservar seus ingressos hoje mesmo! Aqui você encontrará uma seleção diversificada de eventos emocionantes e cativantes
             </p> <br>
-
-            <!-- CONEXÃO COM O BANCO DE DADOS -->
-            <?php
-                $query = "SELECT * FROM plataformaCompraOnlineIngressos.evento";
-                $statement = $conexao->prepare($query);
-                $statement->execute();
-                $results = 
-                $statement->fetchAll(PDO::FETCH_ASSOC);
-                $conexao = null;
-            ?>
             
-            <!-- Filtro dos eventos -->
-            <div class="filter-section">
-                <label for="filter">Filtrar por:</label>
-                <select id="filter">
-                    <!-- FAZER: Mostra categorias do banco em vez da pré estabelecida -->
-                    <option value="todos">Todos</option>
-                    <option value="esportes">Esportes</option>
-                    <option value="música">Música</option>
-                    <option value="teatro">Teatro</option>
-                    <?php
-                    // Verifica se o usuário está logado, se sim mostra opção dos favoritos
-                    if ($_SESSION['usuario_login'] != NULL) {
-                        echo '<option value="favoritos">Favoritos</option>';
-                    } 
-                    ?>
-                </select>
-            </div> <br>
+            
+            <!-- Filtro dos eventos (entre todos e favoritos) só aparece se estiver logado -->
+            <?php
+                // Verifica se o usuário está logado
+                if ($_SESSION['usuario_login'] != NULL) {
+                ?>
+                <div class="filter-section">
+                    <label for="filter">Filtrar por:</label>
+                    <form action="" method="post">
+                    <select id="filter">
+                        <option value="todos">Todos</option>
+                        <option value="favoritos">Favoritos</option>
+                    </select>
+                </div> <br>
+                <?php
+                } 
+            ?>  <br>
 
-            <!-- Mostra todos eventos do banco -->
+           
             <div id="events-container">
+                <!-- Mostra todos eventos do banco -->
+                <?php
+                $conexao = conectarAoBanco();
+                $sql = "SELECT evento.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
+                        FROM plataformaCompraOnlineIngressos.evento
+                        JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco";
+                $retorno = $conexao->prepare($sql);
+                $retorno->execute();
+                $results = $retorno->fetchAll(PDO::FETCH_ASSOC);
+                $conexao = null;
+                ?>
                 <?php foreach ($results as $row): ?>
-                <div class="event">
-                    <h2><?php echo $row['titulo']; ?></h2>
-                    <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
+                    <div class="event">
+                        <h2><?php echo $row['titulo']; ?></h2>
+                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
 
-                    <p><?php echo $row['descricao']; ?></p>
-                    <p>Duração: <?php echo $row['duracao']; ?> horas</p>
-                    
-                    <!-- Verifica se a coluna 'imagem' está definida e não está vazia -->
-                    <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
-                        <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
-                    <?php endif; ?>
-                </div>
+                        <p><?php echo $row['descricao']; ?></p>
+                        <p>Duração: <?php echo $row['duracao']; ?> horas</p>
+                        <p>Local: <?php echo $row['nomelocal']; ?></p>
+                        <!-- Exibe o endereço do evento -->
+                        <p>Endereço: <?php echo $row['rua'] . ', ' . $row['numero'] . ', ' . $row['cidade'] . ', ' . $row['cep']; ?></p>
+                        
+                        <!-- Verifica se a coluna 'imagens' está definida e não está vazia -->
+                        <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
+                            <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
             </div>
 
+
             <!-- FAZER: Mostra eventos favoritos do usuário -->
-
-            <!-- FAZER: Mostra eventos da categoria selecionada -->
-
+            
             <!-- FAZER: Mostra eventos da cosulta da barra de pesquisa -->
 
         </article>
