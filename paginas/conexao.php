@@ -1,25 +1,34 @@
 <?php
+
 function conectarAoBanco() {
-    // ALTERAR INFORMAÇÕES DO BANCO AQUI
+    // ALTERAR INFORMAÇÕES DO BANCO AQUI ----------------
     $host = "localhost";
     $port = "5432 ";
     $dbname = "aulabd1";  
     $user = "postgres";
     $password = "root";
-
+    // -------------------------------------------------
     try {
         $conexao = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
         $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sqlScript = file_get_contents('../script.sql'); // Carregar o script SQL de inicialização
-
-        // ---------- SE QUISER REINICIAR O QUE TEM NO BANCO DESCOMENTAR LINHA ABAIXO ------------------
-        //$conexao->exec($sqlScript);  // obs.: toda vez que entrar na página index vai reiniciar
-
+        
+        /* SE QUISER REINICIAR O QUE TEM NO BANCO (colocar os dados padrão)
+            1) Descomente as duas linhas abaixo "$sqlScript =..." e "$conexao->..."
+            2) Recarregue a página de index
+            3) Comente as duas linhas novamente (se não vai ficar apagando e reiniciando BD sempre)*/
+        
+        //$sqlScript = file_get_contents('script.sql'); // Carregar o script SQL de inicialização
+        //$conexao->exec($sqlScript);  
+        
         return $conexao;
 
     } catch (PDOException $e) {
         die("Erro na conexão: " . $e->getMessage());
     }
 }
+
+session_start(); 
+$_SESSION['usuario_login']; // Criar a variável de sessão usuario_login, global em todos arquivos
+
 ?>

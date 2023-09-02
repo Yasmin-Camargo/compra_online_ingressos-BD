@@ -9,6 +9,11 @@
     <title>Descricao</title>
 </head>
 <body>
+    <?php 
+        //Conectando ao banco de dados
+        include("conexao.php");
+        $conexao = conectarAoBanco();
+    ?>
     <header>
         <h1>TICKET VERSE</h1>
         <p>Desfrute de eventos exclusivos na nossa plataforma de compra online de ingresso</p>
@@ -19,8 +24,15 @@
             </form>
             <nav id="nav-direita">
                 <a href="../index.php" target="_self">Home</a>
-                <a href="descricao.html" target="_self">Descrição</a>
-                <a href="login.html">Entrar</a>
+                <a href="descricao.php" target="_self">Descrição</a>
+                <?php
+                    // Verifica se o usuário está logado
+                    if ($_SESSION['usuario_login'] != NULL) {
+                        echo '<a href="login.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
+                    } else {
+                        echo '<a href="login.php">Entrar</a>';
+                    }
+                ?>
             </nav>
         </div>
     </header>

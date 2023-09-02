@@ -29,17 +29,17 @@
             $retorno = $conexao->query($sql);
 
             if ($retorno) {
-                header("Location: login.html");   // direciona para página de login
+                header("Location: login.php");   // direciona para página de login
             } else {
-                $mensagem_erro = "Erro ao inserir usuario: " . $conexao->errorInfo()[2];
+                echo "Erro ao inserir usuario: ";
             }
         } else {
-            $mensagem_erro = "Erro ao inserir endereço: " . $conexao->errorInfo()[2];
+            echo "Erro ao inserir endereço: ";
         }
 
     } else {
         // Se o formulário não foi submetido
-        header("Location: cadastro.html");
+        header("Location: cadastro.php");
         echo "O formulário não foi submetido.";
     }
     $conexao = null;
