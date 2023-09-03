@@ -3,10 +3,11 @@
 function conectarAoBanco() {
     // ALTERAR INFORMAÇÕES DO BANCO AQUI ----------------
     $host = "localhost";
-    $port = "5432 ";
-    $dbname = "aulabd1";  
+    $port = "5432";
+    $dbname = "trabalhobd";  
     $user = "postgres";
-    $password = "root";
+    $password = "zeliamargot";
+
     // -------------------------------------------------
     try {
         $conexao = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
@@ -26,7 +27,6 @@ function conectarAoBanco() {
         die("Erro na conexão: " . $e->getMessage());
     }
 }
-
 session_start();
 
 // Verifica se a variável de sessão está definida

@@ -26,6 +26,7 @@
             <nav id="nav-direita">
                 <a href="index.php" target="_self">Home</a>
                 <a href="paginas/descricao.php" target="_self">Descrição</a>
+                <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
                 <?php
                     // Verifica se o usuário está logado
                     if ($_SESSION['usuario_login'] != NULL) {
@@ -132,7 +133,7 @@
             </div>
 
             
-            <!-- FAZER: Mostra eventos da cosulta da barra de pesquisa -->
+            <!-- FAZER: Mostra eventos da consulta da barra de pesquisa -->
 
         </article>
     </main>
