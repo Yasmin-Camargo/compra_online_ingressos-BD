@@ -67,39 +67,6 @@
                 <!-- Mostra todos eventos do banco -->
                 <?php
                 $conexao = conectarAoBanco();
-                $sql = "SELECT evento.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
-                        FROM plataformaCompraOnlineIngressos.evento
-                        JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco";
-                $retorno = $conexao->prepare($sql);
-                $retorno->execute();
-                $results = $retorno->fetchAll(PDO::FETCH_ASSOC);
-                $conexao = null;
-                ?>
-                <?php foreach ($results as $row): ?>
-                    <div class="event">
-                        <h2><?php echo $row['titulo']; ?></h2>
-                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
-
-                        <p><?php echo $row['descricao']; ?></p>
-                        <p>Duração: <?php echo $row['duracao']; ?> horas</p>
-                        <p>Local: <?php echo $row['nomelocal']; ?></p>
-                        <!-- Exibe o endereço do evento -->
-                        <p>Endereço: <?php echo $row['rua'] . ', ' . $row['numero'] . ', ' . $row['cidade'] . ', ' . $row['cep']; ?></p>
-                        
-                        <!-- Verifica se a coluna 'imagens' está definida e não está vazia -->
-                        <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
-                            <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-
-            <!-- Mostra eventos favoritos do usuário -->
-            <div id="favoritos-container">
-                <!-- Mostra todos eventos do banco -->
-                <?php
-                $conexao = conectarAoBanco();
                 $sql = "SELECT evento.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep
                         FROM plataformaCompraOnlineIngressos.evento
                         JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco
@@ -131,6 +98,8 @@
                 <?php endforeach; ?>
             </div>
 
+
+            <!-- FAZER: Mostra eventos favoritos do usuário -->
             
             <!-- FAZER: Mostra eventos da cosulta da barra de pesquisa -->
 

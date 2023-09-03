@@ -12,7 +12,6 @@ function conectarAoBanco() {
         $conexao = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
         $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        
         /* SE QUISER REINICIAR O QUE TEM NO BANCO (colocar os dados padrão)
             1) Descomente as duas linhas abaixo "$sqlScript =..." e "$conexao->..."
             2) Recarregue a página de index
@@ -28,7 +27,12 @@ function conectarAoBanco() {
     }
 }
 
-session_start(); 
-$_SESSION['usuario_login']; // Criar a variável de sessão usuario_login, global em todos arquivos
+session_start();
+
+// Verifica se a variável de sessão está definida
+if (!isset($_SESSION['usuario_login'])) {
+    $_SESSION['usuario_login'] = null; // Define um valor padrão, neste caso, nulo
+    $_SESSION['cpf_login'] = null; // Define um valor padrão, neste caso, nulo
+}
 
 ?>

@@ -58,7 +58,7 @@
                 $senha = $_POST['password'];
             
                 // Consulta no banco o usuario 
-                $sql = "SELECT nome, senha FROM plataformaCompraOnlineIngressos.usuario WHERE email = :email";
+                $sql = "SELECT nome, senha, cpf FROM plataformaCompraOnlineIngressos.usuario WHERE email = :email";
                 $retorno = $conexao->prepare($sql);
                 $retorno->bindParam(':email', $email);
                 $retorno->execute();
@@ -68,10 +68,12 @@
                     $row = $retorno->fetch(PDO::FETCH_ASSOC);
                     $nome_usuario = $row['nome'];
                     $senha_usuario = $row['senha'];
+                    $cpf_usuario = $row['cpf'];
                 
                     //Verifica se as senhas são compativeis
                     if ($senha_usuario == $senha) {
                         $_SESSION['usuario_login'] = $nome_usuario;
+                        $_SESSION['cpf_login'] = $cpf_usuario;
                         header("Location: ../index.php");   // direciona para página index
                         exit();
                     } else {
