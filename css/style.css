@@ -289,3 +289,8 @@ footer > p > a:hover{
 #cadastroUsuario {
     text-align: left;
 }
+
+.filter-item {
+    display: block;
+    margin-bottom: 10px; /* Adicione espaço entre os itens para melhorar a legibilidade */
+}
