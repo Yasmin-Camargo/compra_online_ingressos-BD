@@ -44,16 +44,10 @@
             <h1>Compre seus ingressos</h1>
             <p> Nesta página você pode conferir os ingressos disponíveis e os ingressos que você já comprou</p> <br> 
          
-            <!DOCTYPE html>
-<html>
-<head>
-    <title>Exemplo de Filtro Dinâmico</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
 <body>
-    <form action="" method="post">
-        <div class="filter-item">
-            <label for="evento">Selecione o evento:</label>
+    <a href="#" id="toggleSession">Compra ingressos</a>
+    <div class="sessao-expansivel" id="sessionContent">
+    <label for="evento">Selecione o evento:</label>
             <select name="evento" id="evento">
                 <option value="Dua Lipa - Rock In Rio">Dua Lipa - Rock In Rio</option>
                 <option value="Dua Lipa - The Town">Dua Lipa - The Town</option>
@@ -62,56 +56,56 @@
                 <option value="Concerto de Música">Concerto de Música</option>
                 <option value="Exposição de Arte">Exposição de Arte</option>
             </select>
-        </div>
-
         <div class="filter-item" id="categoria-container">
             <label for="categoria">Selecione a categoria do seu ingresso:</label>
             <select name="categoria" id="categoria">
                 <!-- As opções de categoria de ingresso serão carregadas dinamicamente aqui -->
             </select>
-        </div>
-    </form>
-
+    </div>
+    <div class="filter-item" id="cupom-desconto-container">
+            <label for="categoria">Selecione um cupom de desconto:</label>
+            <select name="categoria" id="categoria">
+                <!-- As opções de categoria de ingresso serão carregadas dinamicamente aqui -->
+            </select>
+    </div>
+    <script src="script.js"></script>
+    </div>
     <script>
-    $(document).ready(function() {
-        // Quando o evento selecionado mudar
-        $('#evento').change(function() {
-            var eventoSelecionado = $(this).val();
+     $(document).ready(function() {
+            // Quando o evento selecionado mudar
+            $('#evento').change(function() {
+                var eventoSelecionado = $(this).val();
 
-            // Simule uma solicitação AJAX para buscar as categorias de ingresso
-            // Substitua este trecho pelo código de solicitação AJAX real no seu projeto
-            setTimeout(function() {
-                // Resultado simulado da solicitação AJAX
-                var categorias = [];
+                // Realize uma solicitação AJAX para buscar as categorias de ingresso e cupons de desconto
+                $.ajax({
+                    type: 'POST',
+                    url: 'C:\Program Files\compra_online_ingressos-BD\paginas\processar_compra_ingresso.php', // Caminho correto para o seu arquivo PHP
+                    data: { eventoSelecionado: eventoSelecionado },
+                    dataType: 'json',
+                    success: function(data) {
+                        // Atualize o campo de categoria de ingresso com as opções retornadas
+                        $('#categoria-container select').html(data.categorias);
 
-                // Defina as categorias com base no evento selecionado
-                switch (eventoSelecionado) {
-                    case 'Dua Lipa - Rock In Rio':
-                    case 'Dua Lipa - The Town':
-                        categorias = ['VIP', 'Normal', 'Meia Entrada'];
-                        break;
-                    case 'Workshop sobre Banco de Dados':
-                        categorias = ['Normal Workshop', 'Professor Workshop'];
-                        break;
-                    default:
-                        categorias = ['Selecione uma categoria'];
-                        break;
+                        // Atualize o campo de cupons de desconto com as opções retornadas
+                        $('#cupom-desconto-container select').html(data.cupons);
+                    }
+                });
+            });
+
+            // Referece a parte expandível de compra de ingressos
+            const toggleSession = document.getElementById("toggleSession");
+            const sessionContent = document.getElementById("sessionContent");
+
+            toggleSession.addEventListener("click", function(e) {
+                e.preventDefault();
+                if (sessionContent.classList.contains("expandido")) {
+                    sessionContent.classList.remove("expandido");
+                } else {
+                    sessionContent.classList.add("expandido");
                 }
-                // Limpe as opções existentes
-                $('#categoria').empty();
-
-                // Adicione as novas opções de categoria de ingresso
-                for (var i = 0; i < categorias.length; i++) {
-                    $('#categoria').append('<option value="' + categorias[i] + '">' + categorias[i] + '</option>');
-                }
-            }, 500); // Simula um atraso de 500ms, como uma solicitação AJAX real
-
+            });
         });
-    });
-    </script>
-</body>
-</html>
-
+</script>
     <footer>
         <p>
             Site criado por <a href="https://github.com/Caroline-Camargo">Caroline Souza Camargo</a>, <a href="https://github.com/majudlorenzoni">Maria Júlia Duarte Lorenzoni</a> e <a href="https://github.com/Yasmin-Camargo">Yasmin Souza Camargo</a> para a disciplina de banco de dados.
@@ -119,21 +113,3 @@
     </footer>
 </body>
 </html>
-
-
-<script>
-function atualizarCategorias() {
-    var eventoSelecionado = document.getElementById('evento').value;
-    // Realiza uma solicitação AJAX para buscar as categorias de ingresso
-    $.ajax({
-        type: 'POST',
-            url: 'cd C:\Program Files\compra_online_ingressos-BD\paginas\processar_compra_ingresso.php', // Substitua pelo caminho correto para o seu arquivo PHP
-            data: { evento: eventoSelecionado },
-        success: function(data) {
-            // Atualiza o campo de categoria de ingresso com as opções retornadas
-            $('#categoria').html(data);
-        }
-    });
-}
-$('#evento').change(atualizarCategorias);
-</script>

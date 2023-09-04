@@ -217,6 +217,24 @@ img{
     color: var(--cor01); 
 }
 
+/* Sessão expansível */ 
+.sessao-expansivel {
+    display: none;
+}
+
+.expandido {
+    display: block;
+}
+#toggleSession {
+    margin-bottom: 20px; 
+    color: var(--cor02);
+    font-size: 20px;
+    padding: 2px;
+    padding-left: 10px;
+    font-family: var(--fonte-titulo);
+}
+
+
 /*Filtro dos eventos*/
 .filter-section {
     flex-basis: 30%;
@@ -234,7 +252,10 @@ img{
     border: 1px solid #ddd;
     border-radius: 5px;
 }
-
+.filter-item {
+    display: block;
+    margin-bottom: 10px; /* Adicione espaço entre os itens para melhorar a legibilidade */
+}
 
 /*RODAPÉ*/
 
@@ -290,7 +311,3 @@ footer > p > a:hover{
     text-align: left;
 }
 
-.filter-item {
-    display: block;
-    margin-bottom: 10px; /* Adicione espaço entre os itens para melhorar a legibilidade */
-}
