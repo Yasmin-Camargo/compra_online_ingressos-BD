@@ -88,20 +88,6 @@
                 }
             }
         ?>
-
-        <?php
-            if ($_SESSION['usuario_login'] != NULL) {
-                echo '<a href="login.php?action=logout">Sair</a>';
-            } 
-
-            // Verificar se o usuário clicou em "Sair"
-            if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-                $_SESSION['usuario_login'] = null;
-                header("Location: login.php");
-                exit();
-            }
-        ?>
-        
     </main>
 
     <footer>

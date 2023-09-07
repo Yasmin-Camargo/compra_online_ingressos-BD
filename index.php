@@ -68,7 +68,8 @@
                 <!-- Mostra todos eventos do banco -->
                 <?php
                 $conexao = conectarAoBanco();
-                $sql = "SELECT evento.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
+                $sql = "SELECT  evento.titulo, evento.descricao, evento.nomelocal, evento.duracao, evento.datahoraevento, evento.imagens, 
+                                endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
                         FROM plataformaCompraOnlineIngressos.evento
                         JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco";
                 $retorno = $conexao->prepare($sql);
@@ -76,19 +77,31 @@
                 $results = $retorno->fetchAll(PDO::FETCH_ASSOC);
                 $conexao = null;
                 ?>
-                <?php foreach ($results as $row): ?>
+                <?php foreach ($results as $row): 
+                    //Coleta dados
+                    $titulo = $row['titulo'];
+                    $datahoraevento = $row['datahoraevento'];
+                    $descricao = $row['descricao'];
+                    $duracao = $row['duracao'];
+                    $nomelocal = $row['nomelocal'];
+                    $rua = $row['rua'];
+                    $numero = $row['numero'];
+                    $cidade = $row['cidade'];
+                    $cep = $row['cep'];
+                    $imagens = $row['imagens'];
+                    ?>
                     <div class="event">
-                        <h2><?php echo $row['titulo']; ?></h2>
-                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
+                        <h2><?php echo $titulo; ?></h2>
+                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($datahoraevento)); ?></p>
 
-                        <p><?php echo $row['descricao']; ?></p>
-                        <p>Duração: <?php echo $row['duracao']; ?> horas</p>
-                        <p>Local: <?php echo $row['nomelocal']; ?></p>
+                        <p><?php echo $descricao; ?></p>
+                        <p>Duração: <?php echo $duracao ?> horas</p>
+                        <p>Local: <?php echo $nomelocal; ?></p>
                         <!-- Exibe o endereço do evento -->
-                        <p>Endereço: <?php echo $row['rua'] . ', ' . $row['numero'] . ', ' . $row['cidade'] . ', ' . $row['cep']; ?></p>
+                        <p>Endereço: <?php echo $rua . ', ' . $numero . ', ' . $cidade . ', ' . $cep; ?></p>
                         
                         <!-- Verifica se a coluna 'imagens' está definida e não está vazia -->
-                        <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
+                        <?php if (isset($imagens) && !empty($imagens)): ?>
                             <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
                         <?php endif; ?>
                     </div>
@@ -101,7 +114,8 @@
                 <!-- Mostra todos eventos do banco -->
                 <?php
                 $conexao = conectarAoBanco();
-                $sql = "SELECT evento.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep
+                $sql = "SELECT evento.titulo, evento.descricao, evento.nomelocal, evento.duracao, evento.datahoraevento, evento.imagens, 
+                               endereco.rua, endereco.numero, endereco.cidade, endereco.cep
                         FROM plataformaCompraOnlineIngressos.evento
                         JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco
                         JOIN plataformaCompraOnlineIngressos.favorita ON evento.idevento = favorita.idevento
@@ -113,19 +127,31 @@
                 $results = $retorno->fetchAll(PDO::FETCH_ASSOC);
                 $conexao = null;
                 ?>
-                <?php foreach ($results as $row): ?>
+                <?php foreach ($results as $row): 
+                    //Coleta dados
+                    $titulo = $row['titulo'];
+                    $datahoraevento = $row['datahoraevento'];
+                    $descricao = $row['descricao'];
+                    $duracao = $row['duracao'];
+                    $nomelocal = $row['nomelocal'];
+                    $rua = $row['rua'];
+                    $numero = $row['numero'];
+                    $cidade = $row['cidade'];
+                    $cep = $row['cep'];
+                    $imagens = $row['imagens'];
+                    ?>
                     <div class="event">
-                        <h2><?php echo $row['titulo']; ?></h2>
-                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($row['datahoraevento'])); ?></p>
+                        <h2><?php echo $titulo; ?></h2>
+                        <p class="date"><?php echo date('d \d\e F, Y', strtotime($datahoraevento)); ?></p>
 
-                        <p><?php echo $row['descricao']; ?></p>
-                        <p>Duração: <?php echo $row['duracao']; ?> horas</p>
-                        <p>Local: <?php echo $row['nomelocal']; ?></p>
+                        <p><?php echo $descricao; ?></p>
+                        <p>Duração: <?php echo $duracao ?> horas</p>
+                        <p>Local: <?php echo $nomelocal; ?></p>
                         <!-- Exibe o endereço do evento -->
-                        <p>Endereço: <?php echo $row['rua'] . ', ' . $row['numero'] . ', ' . $row['cidade'] . ', ' . $row['cep']; ?></p>
+                        <p>Endereço: <?php echo $rua . ', ' . $numero . ', ' . $cidade . ', ' . $cep; ?></p>
                         
                         <!-- Verifica se a coluna 'imagens' está definida e não está vazia -->
-                        <?php if (isset($row['imagens']) && !empty($row['imagens'])): ?>
+                        <?php if (isset($imagens) && !empty($imagens)): ?>
                             <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
                         <?php endif; ?>
                     </div>
