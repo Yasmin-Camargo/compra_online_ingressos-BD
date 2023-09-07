@@ -60,7 +60,9 @@
                 $senha = $_POST['password'];
             
                 // Consulta no banco o usuario 
-                $sql = "SELECT nome, senha, cpf FROM plataformaCompraOnlineIngressos.usuario WHERE email = :email";
+                $sql = "SELECT nome, senha, cpf 
+                        FROM plataformaCompraOnlineIngressos.usuario 
+                        WHERE email = :email";
                 $retorno = $conexao->prepare($sql);
                 $retorno->bindParam(':email', $email);
                 $retorno->execute();

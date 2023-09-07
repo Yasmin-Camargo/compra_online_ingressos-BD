@@ -45,7 +45,10 @@
                 <img id="img-usuario" src="../imagens/usuario.png" alt="Imagem padrão Usuário"> <br>
                 <?php
                     // Consulta no banco o usuario 
-                    $sql = "SELECT usuario.*, endereco.rua, endereco.numero, endereco.cidade, endereco.cep FROM plataformaCompraOnlineIngressos.usuario, plataformaCompraOnlineIngressos.endereco WHERE cpf = :cpf and usuario.idendereco = endereco.idendereco";
+                    $sql = "SELECT usuario.nome, usuario.cpf, usuario.senha, usuario.email, 
+                                   endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
+                            FROM plataformaCompraOnlineIngressos.usuario, plataformaCompraOnlineIngressos.endereco 
+                            WHERE cpf = :cpf and usuario.idendereco = endereco.idendereco";
                     $retorno = $conexao->prepare($sql);
                     $retorno->bindParam(':cpf', $_SESSION['cpf_login']);
                     $retorno->execute();

@@ -68,10 +68,14 @@
                 <!-- Mostra todos eventos do banco -->
                 <?php
                 $conexao = conectarAoBanco();
-                $sql = "SELECT  evento.titulo, evento.descricao, evento.nomelocal, evento.duracao, evento.datahoraevento, evento.imagens, 
-                                endereco.rua, endereco.numero, endereco.cidade, endereco.cep 
+                $sql = "SELECT evento.idevento, evento.titulo, evento.descricao, evento.nomelocal, evento.duracao, 
+                            evento.datahoraevento, evento.imagens, endereco.rua, endereco.numero, endereco.cidade, 
+                            endereco.cep, AVG(avalia.nota) AS media_avaliacao
                         FROM plataformaCompraOnlineIngressos.evento
-                        JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco";
+                        JOIN plataformaCompraOnlineIngressos.endereco ON evento.idendereco = endereco.idendereco
+                        LEFT JOIN plataformaCompraOnlineIngressos.avalia ON evento.IDevento = avalia.IDevento
+                        GROUP BY evento.titulo, evento.idevento, evento.descricao, evento.nomelocal, evento.duracao, 
+                            evento.datahoraevento, evento.imagens, endereco.rua, endereco.numero, endereco.cidade, endereco.cep";
                 $retorno = $conexao->prepare($sql);
                 $retorno->execute();
                 $results = $retorno->fetchAll(PDO::FETCH_ASSOC);
@@ -79,6 +83,7 @@
                 ?>
                 <?php foreach ($results as $row): 
                     //Coleta dados
+                    $idevento = $row['idevento'];
                     $titulo = $row['titulo'];
                     $datahoraevento = $row['datahoraevento'];
                     $descricao = $row['descricao'];
@@ -93,18 +98,32 @@
                     <div class="event">
                         <h2><?php echo $titulo; ?></h2>
                         <p class="date"><?php echo date('d \d\e F, Y', strtotime($datahoraevento)); ?></p>
-
                         <p><?php echo $descricao; ?></p>
                         <p>Duração: <?php echo $duracao ?> horas</p>
                         <p>Local: <?php echo $nomelocal; ?></p>
-                        <!-- Exibe o endereço do evento -->
                         <p>Endereço: <?php echo $rua . ', ' . $numero . ', ' . $cidade . ', ' . $cep; ?></p>
+                        <br><h4>Média de Avaliação: <?php echo $row['media_avaliacao'] !== null ? round($row['media_avaliacao'], 2) : 'N/A'; ?></h4>
                         
+                        <?php
+                            // Quantidade de Favoritos
+                            $conexao = conectarAoBanco();
+                            $sql = "SELECT COUNT(*) AS numero_de_favoritos
+                                    FROM plataformaCompraOnlineIngressos.favorita
+                                    WHERE idevento = :idevento";
+                            $retorno = $conexao->prepare($sql);
+                            $retorno->bindParam(':idevento', $idevento);
+                            $retorno->execute();
+                            $retorno = $retorno->fetch(PDO::FETCH_ASSOC);
+                            $numero_de_favoritos = $retorno['numero_de_favoritos'];
+                        ?>
+                        <h4>Quantidade de Favoritos: <?php echo $numero_de_favoritos; ?></h4>
+
                         <!-- Verifica se a coluna 'imagens' está definida e não está vazia -->
                         <?php if (isset($imagens) && !empty($imagens)): ?>
                             <img src="<?php echo $row['imagens']; ?>" alt="Imagem do evento">
                         <?php endif; ?>
                     </div>
+
                 <?php endforeach; ?>
             </div>
 
