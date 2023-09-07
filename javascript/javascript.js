@@ -19,12 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Na página do usuário oculta informações quando clica em editar
 function editInfoUsuario() {
-    const informacoesUsuario = document.querySelector('.InformacoesUsuario');
-    const editarInfo = document.querySelector('#editar-info');
-
-    // Alterna a exibição entre as divs
-    informacoesUsuario.style.display = 'none';
-    editarInfo.style.display = 'block';
+    var editarInfoDiv = document.getElementById("editar-info");
+    editarInfoDiv.style.display = "block";
 }
 
 

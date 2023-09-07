@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../imagens/icons8-claquete-64.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/style.css">
-    <script src="javascript.js"></script>
+    <script src="../javascript/javascript.js"></script>
     <title>Entrar</title>
 </head>
 <body>
@@ -77,7 +77,7 @@
             
             <div id="editar-info" class="login-container" style="display: none;">
                 <h1>Editar Informações</h1>
-                <form>
+                <form action="atualizar_usuario.php" method="post">
                     <?php
                         //Formulario para alterar os dados
                         echo '<label for="nome">Nome:</label><br>';
@@ -93,7 +93,7 @@
                         echo ' <input type="text" id="numero" name="numero" value=' . $numero_endereco . '><br><br>';
                         
                         echo '<label for="cidade">Cidade:</label><br>';
-                        echo ' <input type="text" id="Cidade" name="Cidade" value=' . $cidade_endereco . '><br><br>';
+                        echo ' <input type="text" id="cidade" name="cidade" value=' . $cidade_endereco . '><br><br>';
                         
                         echo '<label for="cep">CEP:</label><br>';
                         echo ' <input type="text" id="cep" name="cep" value=' . $cep_endereco . '><br><br>';
@@ -102,7 +102,6 @@
                 </form>
             </div>
         </article>
-        
     </main>
 
     <footer>
