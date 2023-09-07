@@ -94,7 +94,6 @@ try {
         echo "Nome do Evento: " . $row['nome_evento'] . "<br>";
         echo "Preço do Ingresso: " . $row['preco_ingresso'] . "<br>";
         echo "Categoria do Ingresso: " . $row['categoria_ingresso'] . "<br>";
-      //  echo "Método de Pagamento: " . $row['metodo_pagamento'] . "<br>";
     }
 } catch (PDOException $e) {
     echo "Erro na consulta: " . $e->getMessage();
