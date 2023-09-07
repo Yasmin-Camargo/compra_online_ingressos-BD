@@ -41,12 +41,12 @@
     </header>
     <main>
         <article class="ingresso-container">
-            <h1>Compre seus ingressos</h1>
+            <h1>Ingressos</h1>
             <p> Nesta página você pode conferir os ingressos disponíveis e os ingressos que você já comprou</p> <br> 
          
 <body>
-    <a href="#" id="toggleSession">Compra ingressos</a>
-    <div class="sessao-expansivel" id="sessionContent">
+  <a href="#" id="toggleSession">Compra de ingressos</a>
+     <!--  <div class="sessao-expansivel" id="sessionContent">
     <label for="evento">Selecione o evento:</label>
             <select name="evento" id="evento">
                 <option value="Dua Lipa - Rock In Rio">Dua Lipa - Rock In Rio</option>
@@ -59,17 +59,37 @@
         <div class="filter-item" id="categoria-container">
             <label for="categoria">Selecione a categoria do seu ingresso:</label>
             <select name="categoria" id="categoria">
-                <!-- As opções de categoria de ingresso serão carregadas dinamicamente aqui -->
+            -As opções de categoria de ingresso serão carregadas dinamicamente aqui 
             </select>
     </div>
     <div class="filter-item" id="cupom-desconto-container">
             <label for="categoria">Selecione um cupom de desconto:</label>
             <select name="categoria" id="categoria">
-                <!-- As opções de categoria de ingresso serão carregadas dinamicamente aqui -->
+            As opções de categoria de ingresso serão carregadas dinamicamente aqui
             </select>
-    </div>
     <script src="script.js"></script>
-    </div>
+    </div>  -->
+    
+    <a href="#" id="toggleSession">Consulte seus ingressos</a>
+    <div class="sessao-expansivel" id="sessionContent">
+    <h2>Consulta de Usuários</h2>
+    <?php
+
+    $result = pg_query($dbcon, "SELECT CPF, nome FROM usuario");
+
+    if (!$result) {
+        echo "Erro na consulta.<br>";
+        exit;
+    }
+
+    while ($row = pg_fetch_row($result)) {
+        echo "CPF: $row[0]  Nome: $row[1]";
+        echo "<br />\n";
+    }
+
+    // Fechar a conexão com o banco de dados
+    pg_close($dbcon);
+    ?>
     <script>
      $(document).ready(function() {
             // Quando o evento selecionado mudar
