@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="imagens/icons8-claquete-64.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
-    <script src="javascript.js"></script>
+    <script src="javascript/javascript.js"></script>
     <title>Plataforma de compra online de ingressos</title>
 </head>
 <body>
@@ -19,8 +19,8 @@
         <h1>TICKET VERSE</h1>
         <p>Desfrute de eventos exclusivos na nossa plataforma de compra online de ingresso</p>
         <div id="menu">
-            <form id="pesquisa-esquerda" action="/search" method="get">
-                <input type="text" name="q" placeholder="Digite um evento...">
+            <form id="pesquisa-esquerda" action="/paginas/pesquisa.php" method="get">
+                <input type="text" name="busca" placeholder="Digite sua pesquisa...">
                 <button type="submit">Buscar </button>
             </form>
             <nav id="nav-direita">
@@ -28,9 +28,9 @@
                 <a href="paginas/descricao.php" target="_self">Descrição</a>
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
                 <?php
-                    // Verifica se o usuário está logado
+                    // Verifica se o usuário está logado (para mostrar nome dele)
                     if ($_SESSION['usuario_login'] != NULL) {
-                        echo '<a href="paginas/login.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
+                        echo '<a href="paginas/usuario.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
                     } else {
                         echo '<a href="paginas/login.php">Entrar</a>';
                     }
@@ -131,9 +131,6 @@
                     </div>
                 <?php endforeach; ?>
             </div>
-
-            
-            <!-- FAZER: Mostra eventos da consulta da barra de pesquisa -->
 
         </article>
     </main>

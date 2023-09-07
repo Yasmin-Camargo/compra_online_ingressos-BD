@@ -28,9 +28,9 @@
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
 
                 <?php
-                    // Verifica se o usuário está logado
+                    // Verifica se o usuário está logado (para mostrar nome dele)
                     if ($_SESSION['usuario_login'] != NULL) {
-                        echo '<a href="login.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
+                        echo '<a href="usuario.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
                     } else {
                         echo '<a href="login.php">Entrar</a>';
                     }

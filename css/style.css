@@ -293,7 +293,7 @@ footer > p > a:hover{
     outline: none;
 }
 
-.login-container button {
+.login-container button,  #botaoEditar{
     padding: 10px;
     background-color: var(--cor00);
     color: #fff;
@@ -311,3 +311,8 @@ footer > p > a:hover{
     text-align: left;
 }
 
+#img-usuario{
+    float: left;
+    width: 16%;
+    margin-right: 20px;
+}

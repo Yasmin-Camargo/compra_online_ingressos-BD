@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../imagens/icons8-claquete-64.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="javascript/javascript.js"></script>
     <title>Cadastro</title>
 </head>
 <body>
@@ -27,9 +28,9 @@
                 <a href="descricao.php" target="_self">Descrição</a>
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
                 <?php
-                    // Verifica se o usuário está logado
+                    // Verifica se o usuário está logado (para mostrar nome dele)
                     if ($_SESSION['usuario_login'] != NULL) {
-                        echo '<a href="login.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
+                        echo '<a href="usuario.php">Bem-vindo, '. $_SESSION['usuario_login'] .'</a>';
                     } else {
                         echo '<a href="login.php">Entrar</a>';
                     }

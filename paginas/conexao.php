@@ -3,10 +3,10 @@
 function conectarAoBanco() {
     // ALTERAR INFORMAÇÕES DO BANCO AQUI ----------------
     $host = "localhost";
-    $port = "5432";
-    $dbname = "trabalhobd";  
+    $port = "5432 ";
+    $dbname = "aulabd1";  
     $user = "postgres";
-    $password = "zeliamargot";
+    $password = "root";
 
     // -------------------------------------------------
     try {
