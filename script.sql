@@ -425,8 +425,8 @@ VALUES ('11223344556'),
        ('14227765883');
 
 INSERT INTO categoriaIngresso (nomeCategoriaIngresso, descricao, restricao, desconto)
-VALUES  ('Normal Workshop', 'Ingresso padrão', 'Nenhuma restrição', 0),
-        ('Professor Workshop', 'Ingresso docente', 'Apenas professores tem direito', 100);
+VALUES  ('Normal Workshop', 'Ingresso padrão', 'Nenhuma restrição', 1),
+        ('Professor Workshop', 'Ingresso docente', 'Apenas professores tem direito', 0);
 
 INSERT INTO cupomDesconto (codigoDesconto, porcentagemDesconto, restricoes, dataInicio, dataTermino)
 VALUES  ('EstudanteUFPEL', 100, 'Valido para os estudantes que apresentarem o comprovante', '2023-09-01', '2023-09-07'),
