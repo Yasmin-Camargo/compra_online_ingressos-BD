@@ -11,7 +11,7 @@
     <title>Comprar Ingresso</title>
 </head>
 <body>
-    <?php 
+    <?php
         //Conectando ao banco de dados
         include("conexao.php");
         $conexao = conectarAoBanco();
@@ -39,93 +39,94 @@
             </nav>
         </div>
     </header>
+
     <main>
         <article class="ingresso-container">
             <h1>Ingressos</h1>
             <p> Nesta página você pode conferir os ingressos disponíveis e os ingressos que você já comprou</p> <br> 
-         
-<body>
-  <a href="#" id="toggleSession">Compra de ingressos</a>
-     <!--  <div class="sessao-expansivel" id="sessionContent">
-    <label for="evento">Selecione o evento:</label>
-            <select name="evento" id="evento">
-                <option value="Dua Lipa - Rock In Rio">Dua Lipa - Rock In Rio</option>
-                <option value="Dua Lipa - The Town">Dua Lipa - The Town</option>
-                <option value="Workshop sobre Banco de Dados">Workshop - Banco de Dados</option>    
-                <option value="Palestra IA">Palestra IA</option> 
-                <option value="Concerto de Música">Concerto de Música</option>
-                <option value="Exposição de Arte">Exposição de Arte</option>
-            </select>
-        <div class="filter-item" id="categoria-container">
-            <label for="categoria">Selecione a categoria do seu ingresso:</label>
-            <select name="categoria" id="categoria">
-            -As opções de categoria de ingresso serão carregadas dinamicamente aqui 
-            </select>
-    </div>
-    <div class="filter-item" id="cupom-desconto-container">
-            <label for="categoria">Selecione um cupom de desconto:</label>
-            <select name="categoria" id="categoria">
-            As opções de categoria de ingresso serão carregadas dinamicamente aqui
-            </select>
-    <script src="script.js"></script>
-    </div>  -->
-    
-    <a href="#" id="toggleSession">Consulte seus ingressos</a>
-    <div class="sessao-expansivel" id="sessionContent">
-    <h2>Consulta de Usuários</h2>
-    <?php
+            <a href="#" id="toggleConsultarIngressos" class="toggleSession">Consulte seus ingressos</a>
+            <div class="sessao-expansivel" id="sessionContent">
 
-    $result = pg_query($dbcon, "SELECT CPF, nome FROM usuario");
-
-    if (!$result) {
-        echo "Erro na consulta.<br>";
-        exit;
-    }
-
-    while ($row = pg_fetch_row($result)) {
-        echo "CPF: $row[0]  Nome: $row[1]";
-        echo "<br />\n";
-    }
-
-    // Fechar a conexão com o banco de dados
-    pg_close($dbcon);
-    ?>
-    <script>
-     $(document).ready(function() {
-            // Quando o evento selecionado mudar
-            $('#evento').change(function() {
-                var eventoSelecionado = $(this).val();
-
-                // Realize uma solicitação AJAX para buscar as categorias de ingresso e cupons de desconto
-                $.ajax({
-                    type: 'POST',
-                    url: 'C:\Program Files\compra_online_ingressos-BD\paginas\processar_compra_ingresso.php', // Caminho correto para o seu arquivo PHP
-                    data: { eventoSelecionado: eventoSelecionado },
-                    dataType: 'json',
-                    success: function(data) {
-                        // Atualize o campo de categoria de ingresso com as opções retornadas
-                        $('#categoria-container select').html(data.categorias);
-
-                        // Atualize o campo de cupons de desconto com as opções retornadas
-                        $('#cupom-desconto-container select').html(data.cupons);
+             <?php
+                // Verifica se o usuário está logado (para mostrar nome dele)
+                if (isset($_SESSION['usuario_login']) && !empty($_SESSION['usuario_login'])) {
+                    echo '<a href="usuario.php">Bem-vindo, ' . $_SESSION['usuario_login'] . '</a>';
+                    if (!$conexao) {
+                        echo "Ocorreu um erro de conexão, recarregue a página.\n";
                     }
-                });
-            });
+                    
+                    // Verifica se houve um erro de conexão
+                    if (!$conexao) {
+                        echo "Ocorreu um erro de conexão com o banco de dados, recarregue a página.";
+                    }else  {
+                        
+                        // Consulta ao banco de dados
+                        $sql = "SELECT usuario.nome, usuario.cpf,
+                        ingresso.preco, ingresso.numassento, 
+                        categoriaIngresso.nomeCategoriaIngresso,
+                        evento.titulo,
+                        evento.descricao
+                        FROM plataformaCompraOnlineIngressos.usuario
+                        INNER JOIN plataformaCompraOnlineIngressos.carrinhoCompras
+                            ON usuario.cpf = carrinhoCompras.cpf
+                        INNER JOIN plataformaCompraOnlineIngressos.ingresso
+                            ON carrinhoCompras.IDcarrinhoCompras = ingresso.IDcarrinhoCompras
+                        INNER JOIN plataformaCompraOnlineIngressos.categoriaIngresso 
+                            ON ingresso.nomeCategoriaIngresso = categoriaIngresso.nomeCategoriaIngresso
+                        INNER JOIN plataformaCompraOnlineIngressos.evento
+                            ON evento.idevento = ingresso.idevento
+                        WHERE usuario.cpf = :cpf;";
 
-            // Referece a parte expandível de compra de ingressos
-            const toggleSession = document.getElementById("toggleSession");
-            const sessionContent = document.getElementById("sessionContent");
+                    $retorno = $conexao->prepare($sql);
+                    $retorno->bindParam(':cpf', $_SESSION['cpf_login']);
+                    $retorno->execute();
 
-            toggleSession.addEventListener("click", function(e) {
-                e.preventDefault();
-                if (sessionContent.classList.contains("expandido")) {
-                    sessionContent.classList.remove("expandido");
-                } else {
-                    sessionContent.classList.add("expandido");
+                    if ($retorno->rowCount() > 0) {
+                        $row = $retorno->fetch(PDO::FETCH_ASSOC);
+                        $nome_usuario = $row['nome'];
+                        $cpf_usuario = $row['cpf'];
+                        $titulo_evento = $row['titulo'];
+                        $descricao_evento = $row['descricao'];
+                        $preco_ingresso = $row['preco'];
+                        $numAssento_ingresso = $row['numassento'];
+                        $categoria_ingresso = $row['nomecategoriaingresso'];
+
+                        echo "<p><strong>Nome:</strong> " . $nome_usuario . "</p><br>";
+                        echo "<p><strong>CPF:</strong> " . $cpf_usuario . "</p><br>";
+                        echo "<p><strong>Evento:</strong> " . $titulo_evento . "</p><br>";
+                        echo "<p><strong>Descrição:</strong> " . $descricao_evento . "</p><br>";
+                        echo "<p><strong>Preço:</strong> " . $preco_ingresso . "</p><br>";
+                        echo "<p><strong>Assento:</strong> " . $numAssento_ingresso . "</p><br>";
+                        echo "<p><strong>Categoria do ingresso:</strong> " . $categoria_ingresso . "</p><br>";
+
+                    } else {
+                        echo "Nenhum dado encontrado.";
+                    }
                 }
-            });
-        });
-</script>
+            }
+            
+            ?> 
+
+            <script>
+                const mostrarConsultaSQL = document.getElementById("mostrarConsultaSQL");
+                const consultaSQL = document.getElementById("consultaSQL");
+                mostrarConsultaSQL.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    // Defina o conteúdo do elemento "consultaSQL" com a consulta
+                    consultaSQL.textContent = consulta;
+
+                    // Torna o elemento "consultaSQL" visível
+                    consultaSQL.style.display = "block";
+                });
+                </script>
+            </article>
+
+            <a href="#" id="toggleCompraIngressos" class="toggleSession">Compra de ingressos</a>
+            <div class="sessao-expansivel" id="sessionContent">
+
+
+    </main>
+
     <footer>
         <p>
             Site criado por <a href="https://github.com/Caroline-Camargo">Caroline Souza Camargo</a>, <a href="https://github.com/majudlorenzoni">Maria Júlia Duarte Lorenzoni</a> e <a href="https://github.com/Yasmin-Camargo">Yasmin Souza Camargo</a> para a disciplina de banco de dados.
@@ -133,3 +134,28 @@
     </footer>
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Referece a parte expansível de compra de ingressos
+        const toggleCompraIngressos = document.getElementById("toggleCompraIngressos");
+        const toggleConsultarIngressos = document.getElementById("toggleConsultarIngressos");
+        const sessionContent = document.getElementById("sessionContent");
+        const consultaSql = document.getElementById("consultaSql"); // Elemento para exibir a consulta SQL
+
+        toggleCompraIngressos.addEventListener("click", function (e) {
+            //e.preventDefault();
+            sessionContent.classList.toggle("expandido");
+
+            // Adicione aqui o código para definir o conteúdo da consulta SQL no elemento "consultaSql"
+            consultaSql.style.display = "block"; // Torna o elemento visível
+        });
+
+        toggleConsultarIngressos.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionContent.classList.toggle("expandido");
+
+            // Adicione aqui o código para definir o conteúdo da consulta SQL no elemento "consultaSql"
+            //consultaSql.style.display = "block"; // Torna o elemento visível
+        });
+</script>
