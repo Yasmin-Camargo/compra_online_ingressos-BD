@@ -225,7 +225,7 @@ img{
 .expandido {
     display: block;
 }
-#toggleSession {
+.toggleSession {
     margin-bottom: 20px; 
     color: var(--cor02);
     font-size: 20px;
