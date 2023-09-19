@@ -13,6 +13,7 @@
         //Conectando ao banco de dados
         include("conexao.php");
         $conexao = conectarAoBanco();
+    
     ?>
     <header>
         <h1>TICKET VERSE</h1>
@@ -35,6 +36,8 @@
             <h1>Confira os eventos que você está organizando</h1>
             <div class="InformacoesEvento">
             <?php
+            if (isset($_SESSION['cnpj_login'])) {
+                $cnpj = $_SESSION['cnpj_login'];
             // Consulta eventos relacionados ao CNPJ desse organizador
             $sql = "SELECT evento.titulo
             FROM plataformaCompraOnlineIngressos.evento
@@ -53,9 +56,12 @@
 
             echo "<p><strong>Nome:</strong> " . $titulo_evento . "</p><br>";
             } else {
-                echo "Nenhum dado encontrado.";
-            }
-            ?>
+                echo "Nenhum dado encontrado."; 
+            
+            } 
+            } else { header("Location: login_organizadores.php");
+        }
+    ?>
 
             <button id="botaoEditar" onclick="editInfoUsuario()">Editar Dados</button> 
                         </div> <br> 
