@@ -48,6 +48,11 @@
             <div class="sessao-expansivel" id="sessionContent">
 
              <?php
+
+                if(!isset ($_SESSION['usuario_login'])) {
+                    header("Location: login.php");
+                    exit();
+                }
                 // Verifica se o usuário está logado (para mostrar nome dele)
                 if (isset($_SESSION['usuario_login']) && !empty($_SESSION['usuario_login'])) {
                     echo '<a href="usuario.php">Bem-vindo, ' . $_SESSION['usuario_login'] . '</a>';
@@ -65,8 +70,12 @@
                         ingresso.preco, ingresso.numassento, 
                         categoriaIngresso.nomeCategoriaIngresso,
                         evento.titulo,
-                        evento.descricao
-                        FROM plataformaCompraOnlineIngressos.usuario
+                        evento.descricao,
+                        localevento.nomelocal,
+                        endereco.rua, 
+                        endereco.numero,
+                        endereco.cidade
+                        FROM plataformacompraOnlineIngressos.usuario
                         INNER JOIN plataformaCompraOnlineIngressos.carrinhoCompras
                             ON usuario.cpf = carrinhoCompras.cpf
                         INNER JOIN plataformaCompraOnlineIngressos.ingresso
@@ -75,6 +84,10 @@
                             ON ingresso.nomeCategoriaIngresso = categoriaIngresso.nomeCategoriaIngresso
                         INNER JOIN plataformaCompraOnlineIngressos.evento
                             ON evento.idevento = ingresso.idevento
+                        INNER JOIN plataformaCompraOnlineIngressos.localevento
+                            ON evento.idendereco = localevento.idendereco
+                        INNER JOIN plataformaCompraOnlineIngressos.endereco
+                            ON localEvento.idendereco = endereco.idendereco
                         WHERE usuario.cpf = :cpf;";
 
                     $retorno = $conexao->prepare($sql);
@@ -90,6 +103,10 @@
                         $preco_ingresso = $row['preco'];
                         $numAssento_ingresso = $row['numassento'];
                         $categoria_ingresso = $row['nomecategoriaingresso'];
+                        $nome_local = $row['nomelocal'];
+                        $rua_evento = $row['rua'];
+                        $numero_evento = $row ['numero'];
+                        $cidade_evento = $row ['cidade'];
 
                         echo "<p><strong>Nome:</strong> " . $nome_usuario . "</p><br>";
                         echo "<p><strong>CPF:</strong> " . $cpf_usuario . "</p><br>";
@@ -98,7 +115,7 @@
                         echo "<p><strong>Preço:</strong> " . $preco_ingresso . "</p><br>";
                         echo "<p><strong>Assento:</strong> " . $numAssento_ingresso . "</p><br>";
                         echo "<p><strong>Categoria do ingresso:</strong> " . $categoria_ingresso . "</p><br>";
-
+                        echo "<p><strong>Endereco:</strong> " . $rua_evento . "," . $numero_evento . ", " . $cidade_evento . "</p><br>";
                     } else {
                         echo "Nenhum dado encontrado.";
                     }
