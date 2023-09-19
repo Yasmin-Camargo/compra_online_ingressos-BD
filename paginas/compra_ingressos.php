@@ -45,14 +45,10 @@
             <h1>Ingressos</h1>
             <p> Nesta página você pode conferir os ingressos disponíveis e os ingressos que você já comprou</p> <br> 
             <a href="#" id="toggleConsultarIngressos" class="toggleSession">Consulte seus ingressos</a>
-            <div class="sessao-expansivel" id="sessionContent">
+            <div class="sessao-expansivel" id="sessionContent1">
 
              <?php
 
-                if(!isset ($_SESSION['usuario_login'])) {
-                    header("Location: login.php");
-                    exit();
-                }
                 // Verifica se o usuário está logado (para mostrar nome dele)
                 if (isset($_SESSION['usuario_login']) && !empty($_SESSION['usuario_login'])) {
                     echo '<a href="usuario.php">Bem-vindo, ' . $_SESSION['usuario_login'] . '</a>';
@@ -123,26 +119,68 @@
             }
             
             ?> 
-
-            <script>
-                const mostrarConsultaSQL = document.getElementById("mostrarConsultaSQL");
-                const consultaSQL = document.getElementById("consultaSQL");
-                mostrarConsultaSQL.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    // Defina o conteúdo do elemento "consultaSQL" com a consulta
-                    consultaSQL.textContent = consulta;
-
-                    // Torna o elemento "consultaSQL" visível
-                    consultaSQL.style.display = "block";
-                });
-                </script>
-            </article>
+            </div>
 
             <a href="#" id="toggleCompraIngressos" class="toggleSession">Compra de ingressos</a>
-            <div class="sessao-expansivel" id="sessionContent">
+            <div class="sessao-expansivel" id="sessionContent2">
+            <label for="eventoSelecionado">Selecione um evento:</label>
+            <select name="eventoSelecionado" id="eventoSelecionado">
+                <?php
+                // Verifica se o usuário está logado (para mostrar o nome dele)
+                if (isset($_SESSION['usuario_login']) && !empty($_SESSION['usuario_login'])) {
+                    if (!$conexao) {
+                        echo "Você não está logado. \n";
+                    }
+                }
 
+                  // Verifica se a variável eventoSelecionado está definida no POST
+               $eventoSelecionado = isset($_POST['eventoSelecionado']) ? $_POST['eventoSelecionado'] : '';
 
-    </main>
+                $sqlEvento = "SELECT titulo FROM plataformacompraonlineingressos.evento";
+                $stmtEvento = $conexao->query($sqlEvento);
+
+                $tituloEvento = array();
+                while ($row = $stmtEvento->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($tituloEvento, $row['titulo']);
+                }
+
+                foreach ($tituloEvento as $titulo) {
+                    // Verifica se o evento está selecionado e marca a opção
+                    $selected = ($titulo == $_POST['eventoSelecionado']) ? 'selected' : '';
+                    echo '<option value="' . $titulo . '" ' . $selected . '>' . $titulo . '</option>';
+                }
+                ?>
+            </select><br>
+
+            <?php
+            // Verifique se um evento foi selecionado
+            if (isset($_POST['eventoSelecionado'])) {
+                // Se um evento foi selecionado, consulte as categorias de ingresso
+                $eventoSelecionado = $_POST['eventoSelecionado'];
+
+                $sqlCategoriaIngresso = "SELECT nomecategoriaingresso FROM plataformacompraonlineingressos.ingresso WHERE idevento = :eventoSelecionado";
+                $stmtCategoriaIngresso = $conexao->prepare($sqlCategoriaIngresso);
+                $stmtCategoriaIngresso->bindParam(':eventoSelecionado', $eventoSelecionado, PDO::PARAM_STR);
+                $stmtCategoriaIngresso->execute();
+
+                $categoriasIngresso = array();
+                while ($row = $stmtCategoriaIngresso->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($categoriasIngresso, $row['nomecategoriaingresso']);
+                }
+                ?>
+
+                <!-- Select para escolher a categoria de ingresso -->
+                <label for="categoriaIngresso">Selecione a categoria do seu ingresso:</label>
+                <select name="categoriaIngresso" id="categoriaIngresso">
+                    <?php 
+                    foreach ($categoriasIngresso as $categoria): ?>
+                    <option value="<?php echo $categoria; ?>"><?php echo $categoria; ?></option>
+                    <?php endforeach; ?>
+                </select><br>
+                <?php } ?>
+                </article>
+
+                </main>
 
     <footer>
         <p>
@@ -152,27 +190,54 @@
 </body>
 </html>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // Referece a parte expansível de compra de ingressos
-        const toggleCompraIngressos = document.getElementById("toggleCompraIngressos");
-        const toggleConsultarIngressos = document.getElementById("toggleConsultarIngressos");
-        const sessionContent = document.getElementById("sessionContent");
-        const consultaSql = document.getElementById("consultaSql"); // Elemento para exibir a consulta SQL
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            // Referece a parte expansível de compra de ingressos
+            const toggleConsultarIngressos = document.getElementById("toggleConsultarIngressos");
+            const toggleCompraIngressos = document.getElementById("toggleCompraIngressos");
+            const sessionContent1 = document.getElementById("sessionContent1");
+            const sessionContent2 = document.getElementById("sessionContent2");
 
-        toggleCompraIngressos.addEventListener("click", function (e) {
-            //e.preventDefault();
-            sessionContent.classList.toggle("expandido");
+            const consultaSql = document.getElementById("consultaSql"); // Elemento para exibir a consulta SQL
 
-            // Adicione aqui o código para definir o conteúdo da consulta SQL no elemento "consultaSql"
-            consultaSql.style.display = "block"; // Torna o elemento visível
-        });
+            toggleConsultarIngressos.addEventListener("click", function (e) {
+                e.preventDefault();
+                sessionContent1.classList.toggle("expandido");
+            });
 
-        toggleConsultarIngressos.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionContent.classList.toggle("expandido");
+            toggleCompraIngressos.addEventListener("click", function (e) {
+                //e.preventDefault();
+                sessionContent2.classList.toggle("expandido");
 
-            // Adicione aqui o código para definir o conteúdo da consulta SQL no elemento "consultaSql"
-            //consultaSql.style.display = "block"; // Torna o elemento visível
-        });
-</script>
+                // Adicione aqui o código para definir o conteúdo da consulta SQL no elemento "consultaSql"
+                //consultaSql.style.display = "block"; // Torna o elemento visível
+            });
+        </script>
+
+        <script>
+                // Função para carregar as categorias de ingresso com base no evento selecionado
+                function carregarCategorias() {
+                    var eventoSelecionado = document.getElementById("eventoSelecionado").value;
+                    var categoriaIngressoSelect = document.getElementById("categoriaIngresso");
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "processar_compra_ingresso.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            // Limpa o select atual
+                            categoriaIngressoSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
+                    
+                            // Preenche o select com as categorias de ingresso retornadas pelo servidor
+                            var data = JSON.parse(xhr.responseText);
+                            for (var i = 0; i < data.length; i++) {
+                                var option = document.createElement("option");
+                                option.value = data[i].id;
+                                option.text = data[i].nome;
+                                categoriaIngressoSelect.appendChild(option);
+                            }
+                        }
+                    };
+                    xhr.send("eventoSelecionado=" + eventoSelecionado);
+                }
+                document.getElementById("eventoSelecionado").addEventListener("change", carregarCategorias);
+             </script>
