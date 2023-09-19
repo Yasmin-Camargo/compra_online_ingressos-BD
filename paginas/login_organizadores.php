@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../imagens/icons8-claquete-64.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Entrar</title>
+    <title>Organizadores</title>
 </head>
 <body>
     <?php 
@@ -42,43 +42,50 @@
     <main>
         <article class="login-container">
             <h1>Login dos organizadores</h1>
+                    <?php if (isset($mensagemErro)) { ?>
+                            <div class="mensagem-erro">
+                        <?php echo $mensagemErro; ?>
+                    </div>
+                <?php } ?>
             <form action="" method="post">
                 <label for="email">E-mail:</label>
                 <input type="text" id="email" name="email" required> <br>
-                <label for="cnpj">CNPJ:    </label>
+                <label for="cnpj">CNPJ:</label>
                 <input type="text" id="cnpj" name="cnpj" required> <br>
-                <a href="consultar_eventos.php">
-                <button type="button">Entrar</button></a>
+                <button type="submit" name="login">Entrar</button></a>
             </form>
             <br>
             <p>Não tem uma conta? <a href="cadastro_organizador.php">Cadastrar-se</a></p>
         </article>
 
-
-   <?php 
+            <?php 
             // Verificar se o formulário de login foi enviado
             if (isset($_POST['login'])) {
                 $cnpj = $_POST["cnpj"];
                 $email_organizador = $_POST["email"];
 
             
-                // Consulta no banco o usuario 
-                $sql = "SELECT cnpj, email, telefone, nome
-                        FROM plataformaCompraOnlineIngressos.organizador 
-                        WHERE cnpj = :cnpj";
+            // Consulta no banco o usuario 
+            $sql = "SELECT cnpj, email, telefone, nome
+                    FROM plataformaCompraOnlineIngressos.organizador 
+                    WHERE cnpj = :cnpj";
                 $retorno = $conexao->prepare($sql);
                 $retorno->bindParam(':cnpj',  $cnpj);
                 $retorno->execute();
-                        
+
                  // Verifica se existe um organizador cadastrado
                 if ($retorno->rowCount() > 0) {
                     $row = $retorno->fetch(PDO::FETCH_ASSOC);
                     $nome_organizador = $row['nome'];
                     $telefone_organizador = $row['telefone'];
                     $cnpj = $_POST["cnpj"];
+
+                    $_SESSION['cnpj_login'] = $cnpj;
+                    // Redireciona o usuário para a página consultar_eventos.php
+                    header("Location: consultar_eventos.php");
+
                 } else {
-                    header("Location: cadastro.php");   // direciona para página de cadastro
-                    exit();
+                $mensagemErro = "Nenhum organizador encontrado com o CNPJ fornecido.";
                 }
             }
         ?>

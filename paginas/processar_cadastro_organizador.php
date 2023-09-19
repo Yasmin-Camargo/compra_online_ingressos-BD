@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':email', $email_organizador);
         $stmt->bindParam(':telefone', $telefone_organizador);
 
-        if ($stmt->execute()) {
+        if ($stmt->execute()) {  
             // Inserção bem-sucedida
             echo "Cadastro realizado com sucesso.";
         } else {
