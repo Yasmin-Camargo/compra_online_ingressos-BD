@@ -33,6 +33,7 @@ consultar o evento, quantos ingressos foram vendidos e de que tipo cada ingresso
                 <a href="../index.php" target="_self">Home</a>
                 <a href="descricao.php" target="_self">Descrição</a>
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
+                <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
                 <?php
                     // Verifica se o usuário está logado (para mostrar nome dele)
                     if ($_SESSION['usuario_login'] != NULL) {
@@ -41,7 +42,6 @@ consultar o evento, quantos ingressos foram vendidos e de que tipo cada ingresso
                         echo '<a href="login.php">Entrar</a>';
                     }
                 ?>
-                 <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
             </nav>
         </div>
     </header>

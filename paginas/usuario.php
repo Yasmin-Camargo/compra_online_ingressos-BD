@@ -27,7 +27,7 @@
                 <a href="../index.php" target="_self">Home</a>
                 <a href="descricao.php" target="_self">Descrição</a>
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
-
+                <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
                 <?php
                     // Verifica se o usuário está logado (para mostrar nome dele)
                     if ($_SESSION['usuario_login'] != NULL) {
@@ -36,8 +36,6 @@
                         echo '<a href="login.php">Entrar</a>';
                     }
                 ?>
-              <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
-
             </nav>
         </div>
     </header>
@@ -109,16 +107,21 @@
                 </form>
             </div>
             <?php
+                // Verifica se o usuário está logado
                 if ($_SESSION['usuario_login'] != NULL) {
-                    echo '<br><a href="login.php?action=logout">Sair</a>';
-                } 
+                    // Usuário está logado, exiba o link de logout e lide com o logout no mesmo arquivo
+                    echo '<a href="?logout=1">Sair</a>';
 
-                // Verificar se o usuário clicou em "Sair"
-                if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-                    $_SESSION['usuario_login'] = null;
-                    $_SESSION['cpf_login'] = null;
-                    header("Location: login.php");
-                    exit();
+                    // Verifique se o parâmetro "logout" está definido na URL
+                    if (isset($_GET['logout']) && $_GET['logout'] == 1) {
+                        // Limpa as variáveis de sessão
+                        $_SESSION['usuario_login'] = null;
+                        $_SESSION['cpf_login'] = null;
+
+                        // Redireciona para a página de login
+                        header("Location: login.php");
+                        exit(); // Certifique-se de sair do script após o redirecionamento
+                    }
                 }
             ?>
         </article>
