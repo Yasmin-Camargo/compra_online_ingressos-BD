@@ -36,6 +36,7 @@
                         echo '<a href="login.php">Entrar</a>';
                     }
                 ?>
+                 <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
             </nav>
         </div>
     </header>

@@ -41,6 +41,7 @@ consultar o evento, quantos ingressos foram vendidos e de que tipo cada ingresso
                         echo '<a href="login.php">Entrar</a>';
                     }
                 ?>
+                 <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
             </nav>
         </div>
     </header>

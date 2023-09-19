@@ -35,56 +35,47 @@
                         echo '<a href="login.php">Entrar</a>';
                     }
                 ?>
-                 <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
+            <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
             </nav>
         </div>
     </header>
-
     <main>
         <article class="login-container">
-            <h1>Login</h1>
+            <h1>Login dos organizadores</h1>
             <form action="" method="post">
                 <label for="email">E-mail:</label>
                 <input type="text" id="email" name="email" required> <br>
-                <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required> <br>
-                <button type="submit" name="login">Entrar</button>
+                <label for="cnpj">CNPJ:    </label>
+                <input type="text" id="cnpj" name="cnpj" required> <br>
+                <a href="consultar_eventos.php">
+                <button type="button">Entrar</button></a>
             </form>
             <br>
-            <p>Não tem uma conta? <a href="cadastro.php">Cadastrar-se</a></p>
+            <p>Não tem uma conta? <a href="cadastro_organizador.php">Cadastrar-se</a></p>
         </article>
 
-        <?php 
+
+   <?php 
             // Verificar se o formulário de login foi enviado
             if (isset($_POST['login'])) {
-                $email = $_POST['email'];
-                $senha = $_POST['password'];
+                $cnpj = $_POST["cnpj"];
+                $email_organizador = $_POST["email"];
+
             
                 // Consulta no banco o usuario 
-                $sql = "SELECT nome, senha, cpf 
-                        FROM plataformaCompraOnlineIngressos.usuario 
-                        WHERE email = :email";
+                $sql = "SELECT cnpj, email, telefone, nome
+                        FROM plataformaCompraOnlineIngressos.organizador 
+                        WHERE cnpj = :cnpj";
                 $retorno = $conexao->prepare($sql);
-                $retorno->bindParam(':email', $email);
+                $retorno->bindParam(':cnpj',  $cnpj);
                 $retorno->execute();
                         
-                 // Verifica se existe um usuário cadastrado
+                 // Verifica se existe um organizador cadastrado
                 if ($retorno->rowCount() > 0) {
                     $row = $retorno->fetch(PDO::FETCH_ASSOC);
-                    $nome_usuario = $row['nome'];
-                    $senha_usuario = $row['senha'];
-                    $cpf_usuario = $row['cpf'];
-                
-                    //Verifica se as senhas são compativeis
-                    if ($senha_usuario == $senha) {
-                        $_SESSION['usuario_login'] = $nome_usuario;
-                        $_SESSION['cpf_login'] = $cpf_usuario;
-                        header("Location: ../index.php");   // direciona para página index
-                        exit();
-                    } else {
-                        echo "Erro ao consultar login usuario: ";
-                    }
-                    
+                    $nome_organizador = $row['nome'];
+                    $telefone_organizador = $row['telefone'];
+                    $cnpj = $_POST["cnpj"];
                 } else {
                     header("Location: cadastro.php");   // direciona para página de cadastro
                     exit();
