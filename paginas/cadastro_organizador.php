@@ -27,7 +27,7 @@
                 <a href="../index.php" target="_self">Home</a>
                 <a href="descricao.php" target="_self">Descrição</a>
                 <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
-                <a href="../paginas/cadastro_organizador.php" target="_self">Organizadores</a>
+                <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
             </nav>
         </div>
     </header>
