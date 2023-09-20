@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="../javascript/javascript.js"></script>
     <title>Entrar</title>
+
 </head>
 <body>
     <?php 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../imagens/icons8-claquete-64.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../javascript/javascript.js"></script>
     <title>Consulte eventos</title>
 </head>
 <body>
@@ -44,10 +45,17 @@
             if (isset($_SESSION['cnpj_login'])) {
                 $cnpj = $_SESSION['cnpj_login'];
             // Consulta eventos relacionados ao CNPJ desse organizador
-            $sql = "SELECT evento.titulo
+            $sql = "SELECT evento.titulo, evento.datahoraevento,
+            evento.descricao, evento.duracao, evento.classificacao,
+            evento.website, evento.nomecategoriaevento,
+            evento.nomelocal, 
+            endereco.rua, endereco.numero, endereco.cidade, 
+            endereco.cep
             FROM plataformaCompraOnlineIngressos.evento
             INNER JOIN plataformaCompraOnlineIngressos.organizador
             ON evento.cnpj = organizador.cnpj
+            INNER JOIN plataformaCompraOnlineIngressos.endereco
+            ON evento.idendereco = endereco.idendereco
             WHERE organizador.cnpj = :cnpj";
 
              $retorno = $conexao->prepare($sql);
@@ -58,15 +66,151 @@
              if ($retorno->rowCount() > 0) {
                 $row = $retorno->fetch(PDO::FETCH_ASSOC);
                 $titulo_evento = $row['titulo'];
+                $dataHora_evento = $row['datahoraevento'];
+                $nomelocal_evento = $row['nomelocal'];
+                $descricao_evento = $row ['descricao'];
+                $duracao_evento = $row['duracao'];
+                $classificacao_evento = $row['classificacao'];
+                $categoria_evento = $row['nomecategoriaevento'];
+                $webSite_evento = $row['website'];
+                $rua_endereco = $row['rua'];
+                $numero_endereco = $row['numero'];
+                $cidade_endereco= $row['cidade'];
+                $cep_endereco= $row['cep'];
 
             echo "<p><strong>Nome:</strong> " . $titulo_evento . "</p><br>";
+            echo "<p><strong>Descrição:</strong> " . $descricao_evento . "</p><br>";
+            echo "<p><strong>Data:</strong> " . $dataHora_evento . "</p><br>";
+            echo "<p><strong>Local:</strong> " . $nomelocal_evento . "</p><br>";
+            echo "<p><strong>Duração do evento:</strong> " . $duracao_evento . " horas </p><br>";
+            echo "<p><strong>Classificação</strong> " . $classificacao_evento . "</p><br>";
+            echo "<p><strong>Categoria:</strong> " . $categoria_evento . "</p><br>";
+            echo "<p><strong>Site:</strong> " . $webSite_evento . "</p><br>";
+            echo "<p><strong>Endereco:</strong> Rua " . $rua_endereco . ", " . $numero_endereco . ", Cidade: " . $cidade_endereco . ", CEP: " . $cep_endereco . "</p><br>";
             } else {
-                echo "Nenhum dado encontrado."; 
-            
+                echo "Nenhum evento encontrado relacionado a sua conta."; 
             } 
-            } else { header("Location: login_organizadores.php");
         }
     ?>
+        <button id="botaoEditar" onclick="editInfoOrganizador()">Editar evento</button>
+        </div> <br>
 
-            <button id="botaoEditar" onclick="editInfoUsuario()">Editar Dados</button> 
-                        </div> <br> 
+
+        <div id="editar-info2" class="login-container" style="display: none;">
+                <h1>Editar Informações</h1>
+                <form action="atualizar_evento.php" method="post">
+                    <?php
+                        //Formulario para alterar os dados
+                        echo '<label for="nome">Nome:</label><br>';
+                        echo '<input type="text" id="titulo" name="titulo" value="' . $titulo_evento . '"><br><br>';
+                        
+                        echo '<label for="descricao">Descrição:</label><br>';
+                        echo '<input type="text" id="descricao" name="descricao" value="' . $descricao_evento . '"><br><br>';
+                        
+                        
+                        echo '<label for="datahoraevento">Data e hora:</label><br>';
+                        echo '<input type="text" id="datahoraevento" name="datahoraevento" value="' . $dataHora_evento . '"><br><br>';
+                        
+                        echo '<label for="duracao">Duração:</label><br>';
+                        echo ' <input type="text" id="duracao" name="duracao" value=' . $duracao_evento . '><br><br>';
+                          
+                        echo '<label for="classificacao">Classificação:</label><br>';
+                        echo ' <input type="text" id="classificacao" name="classificacao" value=' . $classificacao_evento . '><br><br>';
+
+                        echo '<label for="categoria">Categoria:</label><br>';
+                        echo ' <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" value=' . $categoria_evento . '><br><br>';
+
+                        echo '<label for="website">Website:</label><br>';
+                        echo ' <input type="text" id="website" name="website" value=' . $webSite_evento . '><br><br>';
+
+                        echo '<label for="numero">Local:</label><br>';
+                        echo ' <input type="text" id="nomelocal" name="nomelocal"  value="' . $nomelocal_evento . '"><br><br>';
+                        
+                        echo '<label for="rua">Rua:</label><br>';
+                        echo ' <input type="text" id="rua" name="rua" value="' . $rua_endereco . '"><br><br>';
+                        
+                        echo '<label for="numero">Numero:</label><br>';
+                        echo ' <input type="text" id="numero" name="numero" value=' . $numero_endereco . '><br><br>';
+                        
+                        echo '<label for="cidade">Cidade:</label><br>';
+                        echo '<input type="text" id="cidade" name="cidade" value="' . $cidade_endereco . '"><br><br>';
+                        
+                        echo '<label for="cep">CEP:</label><br>';
+                        echo ' <input type="text" id="cep" name="cep" value=' . $cep_endereco . '><br><br>';
+                    ?>
+                    <button type="submit">Atualizar Cadastro</button>
+                </form>
+            </div>
+            <?php
+                if ($_SESSION['cnpj_login'] != NULL) {
+                    echo '<br><a href="login_organizadores.php">Sair</a>';
+                } 
+
+                // Verificar se o usuário clicou em "Sair"
+                if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+                    $_SESSION['cnpj_login'];
+                    header("Location: index.php");
+                    exit();
+                }
+            ?>
+        </article>
+    </main>
+
+<main>
+    <article>
+        <div id="adicionar-evento" class="login-container">
+            <h1>Adicionar Novo Evento</h1>
+            <form action="processar_evento.php" method="post">
+                <label for="titulo">Título do Evento:</label><br>
+                <input type="text" id="titulo" name="titulo" required><br><br>
+
+                <label for="descricao">Descrição do Evento:</label><br>
+                <input type="text" id="descricao" name="descricao"><br><br>
+
+                <label for="descricao">Duração (horas):</label><br>
+                <input type="text" id="duracao" name="duracao"><br><br>
+
+                <label for="datahora">Data e Hora do Evento:</label><br>
+                <input type="datetime-local" id="datahoraevento" name="datahoraevento" required><br><br>
+
+                <label for="classificacao">Classificação:</label><br>
+                <input type="text" id="classificacao" name="classificacao" required><br><br>
+
+                <label for="categoria">Categoria:</label><br>
+                <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" required><br><br>
+
+                <label for="website">Website:</label><br>
+                <input type="text" id="website" name="website"  required><br><br>
+
+                <label for="nomelocal">Local:</label><br>
+                <input type="text" id="nomelocal" name="nomelocal"required><br><br>
+
+                <label for="rua">Rua:</label><br>
+                <input type="text" id="rua" name="rua" required><br><br>
+
+                <label for="numero">Número:</label><br>
+                <input type="text" id="numero" name="numero"required><br><br>
+
+                <label for="cidade">Cidade:</label><br>
+                <input type="text" id="cidade" name="cidade"required><br><br>
+
+                <label for="cep">CEP:</label><br>
+                <input type="text" id="cep" name="cep"required><br><br>
+
+
+                <label for="cnpj">Confirme o seu CNPJ:</label><br>
+                <input type="text" id="cnpj" name="cnpj"required><br><br>
+
+                <button type="submit">Adicionar Evento</button>
+            </form>
+        </div>
+    </article>
+</main>
+    <footer>
+        <p>
+            Site criado por <a href="https://github.com/Caroline-Camargo">Caroline Souza Camargo</a>, <a href="https://github.com/majudlorenzoni">Maria Júlia Duarte Lorenzoni</a> e <a href="https://github.com/Yasmin-Camargo">Yasmin Souza Camargo</a> para a disciplina de banco de dados.
+        </p>
+    </footer>
+</body>
+</html>
+
