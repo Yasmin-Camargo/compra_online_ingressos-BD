@@ -83,7 +83,7 @@
             echo "<p><strong>Site:</strong> " . $webSite_evento . "</p><br>";
             echo "<p><strong>Endereco:</strong> Rua " . $rua_endereco . ", " . $numero_endereco . ", Cidade: " . $cidade_endereco . ", CEP: " . $cep_endereco . "</p><br>";
             } else {
-                echo "Nenhum dado encontrado."; 
+                echo "Nenhum evento encontrado relacionado a sua conta."; 
             } 
         }
     ?>
@@ -151,6 +151,56 @@
         </article>
     </main>
 
+<main>
+    <article>
+        <div id="adicionar-evento" class="login-container">
+            <h1>Adicionar Novo Evento</h1>
+            <form action="processar_evento.php" method="post">
+                <label for="titulo">Título do Evento:</label><br>
+                <input type="text" id="titulo" name="titulo" required><br><br>
+
+                <label for="descricao">Descrição do Evento:</label><br>
+                <input type="text" id="descricao" name="descricao"><br><br>
+
+                <label for="descricao">Duração (horas):</label><br>
+                <input type="text" id="duracao" name="duracao"><br><br>
+
+                <label for="datahora">Data e Hora do Evento:</label><br>
+                <input type="datetime-local" id="datahoraevento" name="datahoraevento" required><br><br>
+
+                <label for="classificacao">Classificação:</label><br>
+                <input type="text" id="classificacao" name="classificacao" required><br><br>
+
+                <label for="categoria">Categoria:</label><br>
+                <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" required><br><br>
+
+                <label for="website">Website:</label><br>
+                <input type="text" id="website" name="website"  required><br><br>
+
+                <label for="nomelocal">Local:</label><br>
+                <input type="text" id="nomelocal" name="nomelocal"required><br><br>
+
+                <label for="rua">Rua:</label><br>
+                <input type="text" id="rua" name="rua" required><br><br>
+
+                <label for="numero">Número:</label><br>
+                <input type="text" id="numero" name="numero"required><br><br>
+
+                <label for="cidade">Cidade:</label><br>
+                <input type="text" id="cidade" name="cidade"required><br><br>
+
+                <label for="cep">CEP:</label><br>
+                <input type="text" id="cep" name="cep"required><br><br>
+
+
+                <label for="cnpj">Confirme o seu CNPJ:</label><br>
+                <input type="text" id="cnpj" name="cnpj"required><br><br>
+
+                <button type="submit">Adicionar Evento</button>
+            </form>
+        </div>
+    </article>
+</main>
     <footer>
         <p>
             Site criado por <a href="https://github.com/Caroline-Camargo">Caroline Souza Camargo</a>, <a href="https://github.com/majudlorenzoni">Maria Júlia Duarte Lorenzoni</a> e <a href="https://github.com/Yasmin-Camargo">Yasmin Souza Camargo</a> para a disciplina de banco de dados.
