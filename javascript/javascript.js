@@ -22,9 +22,10 @@ function editInfoUsuario() {
     var editarInfoDiv = document.getElementById("editar-info");
     editarInfoDiv.style.display = "block";
 }
-function editInfoOrganizador() {
-    var editarInfoDiv = document.getElementById("editar-info2");
-        editarInfoDiv.style.display = "block";
+
+function editInfoOrganizador(eventoID) {
+    var editarInfoDiv = document.getElementById('editar-info-' + eventoID);
+    editarInfoDiv.style.display = "block";
 }
 
 

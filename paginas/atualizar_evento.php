@@ -34,7 +34,7 @@
        duracao = :duracao, classificacao = :classificacao,
        nomecategoriaevento = :nomecategoriaevento,
        website = :website, precobase = :precobase
-       WHERE cnpj = :cnpj";
+       WHERE cnpj = :cnpj AND idevento = :eventoid";
 
         if (!empty($sql)) {
         $retorno = $conexao->prepare($sql);
@@ -47,6 +47,7 @@
         $retorno->bindParam(':nomecategoriaevento', $categoria_evento);
         $retorno->bindParam(':website', $webSite_evento);
         $retorno->bindParam(':precobase', $precobase_evento);
+        $retorno->bindParam(':eventoid', $idevento);
         $retorno->bindParam(':cnpj', $_SESSION['cnpj_login']);
         $retorno->execute();
 
@@ -82,6 +83,6 @@
         } else {
         echo "Campos obrigatórios não preenchidos.";
         }
-        }
-        ?>
-        ?>
+    }
+?>
+        
