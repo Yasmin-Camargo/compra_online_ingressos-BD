@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {  
             // Inserção bem-sucedida
-            echo "Cadastro realizado com sucesso.";
+            header("Location: login_organizadores.php");
         } else {
             // Erro ao inserir
             echo "Erro ao inserir organizador.";
