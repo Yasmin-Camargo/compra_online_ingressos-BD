@@ -44,11 +44,9 @@
             <?php
             if (isset($_SESSION['cnpj_login'])) {
                 $cnpj = $_SESSION['cnpj_login'];
-            // Consulta eventos relacionados ao CNPJ desse organizador
 
-            // adicionar ingressos vendidos e número de favoritos
-            // adicionar quantos reais até agora tem
-            $sql = "SELECT evento.titulo, evento.datahoraevento,
+           // Consulta eventos relacionados ao CNPJ desse organizador
+            $sql = "SELECT evento.idevento, evento.titulo, evento.datahoraevento,
             evento.descricao, evento.duracao, evento.classificacao,
             evento.website, evento.precobase, 
             evento.nomecategoriaevento, categoriaevento.descricaocategoria,  -- Adicione uma vírgula aqui
@@ -65,15 +63,17 @@
             INNER JOIN plataformaCompraOnlineIngressos.localevento
             ON evento.nomelocal = localevento.nomelocal
             WHERE organizador.cnpj = :cnpj";
-    
 
              $retorno = $conexao->prepare($sql);
              $retorno->bindParam(':cnpj', $_SESSION['cnpj_login']);
              $retorno->execute();
 
-             // Mostra dados
+             $eventoCount = 0;
              if ($retorno->rowCount() > 0) {
-                $row = $retorno->fetch(PDO::FETCH_ASSOC);
+                while ($row = $retorno->fetch(PDO::FETCH_ASSOC)) {
+                $eventoCount++;
+                
+                $eventoID = $row['idevento']; // Adicione o ID do evento
                 $titulo_evento = $row['titulo'];
                 $dataHora_evento = $row['datahoraevento'];
                 $descricao_evento = $row ['descricao'];
@@ -94,6 +94,7 @@
                 $cidade_endereco= $row['cidade'];
                 $cep_endereco= $row['cep'];
 
+            echo "<h2>Evento $eventoCount</h2>";
             echo "<p><strong>Nome:</strong> " . $titulo_evento . "</p><br>";
             echo "<p><strong>Data:</strong> " . $dataHora_evento . "</p><br>";
             echo "<p><strong>Descrição:</strong> " . $descricao_evento . "</p><br>";
@@ -110,21 +111,25 @@
             echo "<p><strong>Capacidade do local:</strong> " . $capacidadeLocal . "</p><br>";
 
             echo "<p><strong>Endereco:</strong> Rua " . $rua_endereco . ", " . $numero_endereco . ", Cidade: " . $cidade_endereco . ", CEP: " . $cep_endereco . "</p><br>";
-            } else {
-                echo "Nenhum evento encontrado relacionado a sua conta."; 
-            } 
+            echo "<hr>";
+                }
+           } else {
+                echo "Nenhum evento encontrado relacionado a sua conta.";
+            }
         }
     ?>
-        <button id="botaoEditar" onclick="editInfoOrganizador()">Editar evento</button>
+      <button id="botaoEditar" onclick="editInfoOrganizador()">Editar evento</button>
         </div> <br>
-
 
         <div id="editar-info2" class="login-container" style="display: none;">
                 <h1>Editar Informações</h1>
                 <form action="atualizar_evento.php" method="post">
                     <?php
                         //Formulario para alterar os dados
+                        echo "<input type='hidden' name='idevento' value='$eventoID'>"; // Envie o ID do evento
+                        echo "<h2>Evento $eventoCount</h2>";
                         echo '<label for="nome">Nome:</label><br>';
+
                         echo '<input type="text" id="titulo" name="titulo" value="' . $titulo_evento . '"><br><br>';
 
                         echo '<label for="datahoraevento">Data e hora:</label><br>';
@@ -141,6 +146,9 @@
 
                         echo '<label for="website">Website:</label><br>';
                         echo ' <input type="text" id="website" name="website" value="' . $webSite_evento . '"><br><br>';
+
+                        echo '<label for="precobase">Preço base do ingresso:</label><br>';
+                        echo ' <input type="text" id="precobase" name="precobase" value="' . $precobase_evento . '"><br><br>';
 
                         echo '<label for="categoria">Categoria:</label><br>';
                         echo ' <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" value="' . $categoria_evento . '"><br><br>';
@@ -160,7 +168,7 @@
                         echo '<label for="rua">Rua:</label><br>';
                         echo ' <input type="text" id="rua" name="rua" value="' . $rua_endereco . '"><br><br>';
                         
-                        echo '<label for="numero">Numero:</label><br>';
+                        echo '<label for="numero">Número:</label><br>';
                         echo ' <input type="text" id="numero" name="numero" value=' . $numero_endereco . '><br><br>';
                         
                         echo '<label for="cidade">Cidade:</label><br>';
@@ -168,7 +176,11 @@
                         
                         echo '<label for="cep">CEP:</label><br>';
                         echo ' <input type="text" id="cep" name="cep" value=' . $cep_endereco . '><br><br>';
+                      
+
+                    echo "<hr>";
                     ?>
+                     </div>
                     <button type="submit">Atualizar Cadastro</button>
                 </form>
             </div>
@@ -190,32 +202,43 @@
 <main>
     <article>
         <div id="adicionar-evento" class="login-container">
-            ver as tabelas e ver direitinho o que tem pra fazerc
             <h1>Adicionar Novo Evento</h1>
             <form action="processar_evento.php" method="post">
                 <label for="titulo">Título do Evento:</label><br>
                 <input type="text" id="titulo" name="titulo" required><br><br>
 
+                <label for="datahora">Data e Hora do Evento:</label><br>
+                <input type="datetime-local" id="datahoraevento" name="datahoraevento" required><br><br>
+
                 <label for="descricao">Descrição do Evento:</label><br>
                 <input type="text" id="descricao" name="descricao"><br><br>
 
-                <label for="descricao">Duração (horas):</label><br>
+                <label for="duracao">Duração (horas):</label><br>
                 <input type="text" id="duracao" name="duracao"><br><br>
-
-                <label for="datahora">Data e Hora do Evento:</label><br>
-                <input type="datetime-local" id="datahoraevento" name="datahoraevento" required><br><br>
 
                 <label for="classificacao">Classificação:</label><br>
                 <input type="text" id="classificacao" name="classificacao" required><br><br>
 
-                <label for="categoria">Categoria:</label><br>
-                <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" required><br><br>
-
                 <label for="website">Website:</label><br>
                 <input type="text" id="website" name="website"  required><br><br>
 
+                <label for="precobase">Preço base:</label><br>
+                <input type="text" id="precobase" name="precobase"  required><br><br>
+
+                <label for="nomecategoriaevento">Categoria:</label><br>
+                <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" required><br><br>
+
+                <label for="descricaocategoria">Descrição da categoria:</label><br>
+                <input type="text" id="descricaocategoria" name="descricaocategoria" required><br><br>
+
                 <label for="nomelocal">Local:</label><br>
                 <input type="text" id="nomelocal" name="nomelocal"required><br><br>
+
+                <label for="detalhesdeacesso">Detalhes de acesso:</label><br>
+                <input type="text" id="detalhesdeacesso" name="detalhesdeacesso" required><br><br>
+
+                <label for="capacidade">Capacidade do local:</label><br>
+                <input type="text" id="capacidade" name="capacidade" required><br><br>
 
                 <label for="rua">Rua:</label><br>
                 <input type="text" id="rua" name="rua" required><br><br>
@@ -228,7 +251,6 @@
 
                 <label for="cep">CEP:</label><br>
                 <input type="text" id="cep" name="cep"required><br><br>
-
 
                 <label for="cnpj">Confirme o seu CNPJ:</label><br>
                 <input type="text" id="cnpj" name="cnpj"required><br><br>
