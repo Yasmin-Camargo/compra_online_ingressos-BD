@@ -45,10 +45,14 @@
             if (isset($_SESSION['cnpj_login'])) {
                 $cnpj = $_SESSION['cnpj_login'];
             // Consulta eventos relacionados ao CNPJ desse organizador
+
+            // adicionar ingressos vendidos e número de favoritos
+            // adicionar quantos reais até agora tem
             $sql = "SELECT evento.titulo, evento.datahoraevento,
             evento.descricao, evento.duracao, evento.classificacao,
-            evento.website, evento.nomecategoriaevento,
-            evento.nomelocal, 
+            evento.website, evento.precobase, 
+            evento.nomecategoriaevento, categoriaevento.descricaocategoria,  -- Adicione uma vírgula aqui
+            evento.nomelocal, localevento.detalhesdeacesso, localevento.capacidade,
             endereco.rua, endereco.numero, endereco.cidade, 
             endereco.cep
             FROM plataformaCompraOnlineIngressos.evento
@@ -56,7 +60,12 @@
             ON evento.cnpj = organizador.cnpj
             INNER JOIN plataformaCompraOnlineIngressos.endereco
             ON evento.idendereco = endereco.idendereco
+            INNER JOIN plataformaCompraOnlineIngressos.categoriaevento
+            ON evento.nomecategoriaevento = categoriaevento.nomecategoriaevento
+            INNER JOIN plataformaCompraOnlineIngressos.localevento
+            ON evento.nomelocal = localevento.nomelocal
             WHERE organizador.cnpj = :cnpj";
+    
 
              $retorno = $conexao->prepare($sql);
              $retorno->bindParam(':cnpj', $_SESSION['cnpj_login']);
@@ -67,25 +76,39 @@
                 $row = $retorno->fetch(PDO::FETCH_ASSOC);
                 $titulo_evento = $row['titulo'];
                 $dataHora_evento = $row['datahoraevento'];
-                $nomelocal_evento = $row['nomelocal'];
                 $descricao_evento = $row ['descricao'];
                 $duracao_evento = $row['duracao'];
                 $classificacao_evento = $row['classificacao'];
-                $categoria_evento = $row['nomecategoriaevento'];
                 $webSite_evento = $row['website'];
+                $precobase_evento = $row['precobase'];
+
+                $categoria_evento = $row['nomecategoriaevento'];
+                $descricao_categoria_evento = $row["descricaocategoria"];
+
+                $nomelocal_evento = $row['nomelocal'];
+                $detalhesAcesso = $row["detalhesdeacesso"];
+                $capacidadeLocal = $row["capacidade"];
+                
                 $rua_endereco = $row['rua'];
                 $numero_endereco = $row['numero'];
                 $cidade_endereco= $row['cidade'];
                 $cep_endereco= $row['cep'];
 
             echo "<p><strong>Nome:</strong> " . $titulo_evento . "</p><br>";
-            echo "<p><strong>Descrição:</strong> " . $descricao_evento . "</p><br>";
             echo "<p><strong>Data:</strong> " . $dataHora_evento . "</p><br>";
-            echo "<p><strong>Local:</strong> " . $nomelocal_evento . "</p><br>";
+            echo "<p><strong>Descrição:</strong> " . $descricao_evento . "</p><br>";
             echo "<p><strong>Duração do evento:</strong> " . $duracao_evento . " horas </p><br>";
             echo "<p><strong>Classificação</strong> " . $classificacao_evento . "</p><br>";
-            echo "<p><strong>Categoria:</strong> " . $categoria_evento . "</p><br>";
             echo "<p><strong>Site:</strong> " . $webSite_evento . "</p><br>";
+            echo "<p><strong>Preço base:</strong> " . $precobase_evento . "</p><br>";
+
+            echo "<p><strong>Categoria:</strong> " . $categoria_evento . "</p><br>";
+            echo "<p><strong>Descrição da categoria:</strong> " . $descricao_categoria_evento . "</p><br>";
+
+            echo "<p><strong>Local:</strong> " . $nomelocal_evento . "</p><br>";
+            echo "<p><strong>Detalhes do acesso ao local:</strong> " . $detalhesAcesso . "</p><br>";
+            echo "<p><strong>Capacidade do local:</strong> " . $capacidadeLocal . "</p><br>";
+
             echo "<p><strong>Endereco:</strong> Rua " . $rua_endereco . ", " . $numero_endereco . ", Cidade: " . $cidade_endereco . ", CEP: " . $cep_endereco . "</p><br>";
             } else {
                 echo "Nenhum evento encontrado relacionado a sua conta."; 
@@ -103,28 +126,36 @@
                         //Formulario para alterar os dados
                         echo '<label for="nome">Nome:</label><br>';
                         echo '<input type="text" id="titulo" name="titulo" value="' . $titulo_evento . '"><br><br>';
+
+                        echo '<label for="datahoraevento">Data e hora:</label><br>';
+                        echo '<input type="text" id="datahoraevento" name="datahoraevento" value="' . $dataHora_evento . '"><br><br>';
                         
                         echo '<label for="descricao">Descrição:</label><br>';
                         echo '<input type="text" id="descricao" name="descricao" value="' . $descricao_evento . '"><br><br>';
-                        
-                        
-                        echo '<label for="datahoraevento">Data e hora:</label><br>';
-                        echo '<input type="text" id="datahoraevento" name="datahoraevento" value="' . $dataHora_evento . '"><br><br>';
                         
                         echo '<label for="duracao">Duração:</label><br>';
                         echo ' <input type="text" id="duracao" name="duracao" value=' . $duracao_evento . '><br><br>';
                           
                         echo '<label for="classificacao">Classificação:</label><br>';
-                        echo ' <input type="text" id="classificacao" name="classificacao" value=' . $classificacao_evento . '><br><br>';
-
-                        echo '<label for="categoria">Categoria:</label><br>';
-                        echo ' <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" value=' . $categoria_evento . '><br><br>';
+                        echo ' <input type="text" id="classificacao" name="classificacao" value="' . $classificacao_evento . '"><br><br>';
 
                         echo '<label for="website">Website:</label><br>';
-                        echo ' <input type="text" id="website" name="website" value=' . $webSite_evento . '><br><br>';
+                        echo ' <input type="text" id="website" name="website" value="' . $webSite_evento . '"><br><br>';
 
-                        echo '<label for="numero">Local:</label><br>';
+                        echo '<label for="categoria">Categoria:</label><br>';
+                        echo ' <input type="text" id="nomecategoriaevento" name="nomecategoriaevento" value="' . $categoria_evento . '"><br><br>';
+
+                        echo '<label for="descricaocategoria">Descrição da categoria:</label><br>';
+                        echo ' <input type="text" id="descricaocategoria" name="descricaocategoria" value="'. $descricao_categoria_evento . '"><br><br>';
+
+                        echo '<label for="local">Local:</label><br>';
                         echo ' <input type="text" id="nomelocal" name="nomelocal"  value="' . $nomelocal_evento . '"><br><br>';
+                        
+                        echo '<label for="detalhesdeacesso">Detalhes de acesso:</label><br>';
+                        echo ' <input type="text" id="detalhesdeacesso" name="detalhesdeacesso"  value="' . $detalhesAcesso  . '"><br><br>';
+                       
+                        echo '<label for="capacidade">Capacidade do local:</label><br>';
+                        echo ' <input type="text" id="capacidade" name="capacidade"  value="' . $capacidadeLocal . '"><br><br>';
                         
                         echo '<label for="rua">Rua:</label><br>';
                         echo ' <input type="text" id="rua" name="rua" value="' . $rua_endereco . '"><br><br>';
@@ -159,6 +190,7 @@
 <main>
     <article>
         <div id="adicionar-evento" class="login-container">
+            ver as tabelas e ver direitinho o que tem pra fazerc
             <h1>Adicionar Novo Evento</h1>
             <form action="processar_evento.php" method="post">
                 <label for="titulo">Título do Evento:</label><br>
