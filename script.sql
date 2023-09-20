@@ -74,7 +74,7 @@ CREATE TABLE organizador(
 
 CREATE TABLE categoriaEvento(
     nomeCategoriaEvento VARCHAR(30) NOT NULL,
-    descricao TEXT NOT NULL,
+    descricaocategoria TEXT NOT NULL,
    
     PRIMARY KEY(nomeCategoriaEvento)
 );
@@ -282,7 +282,7 @@ INSERT INTO localEvento (nomeLocal, IDendereco, detalhesDeAcesso, capacidade)
 VALUES ('Cidade do Rock', 1, 'Acesso pela entrada norte', 700000),
        ('Interlagos', 2, 'Acesso pelo portão lateral', 500000);
 
-INSERT INTO categoriaEvento (nomeCategoriaEvento, descricao)
+INSERT INTO categoriaEvento (nomeCategoriaEvento, descricaocategoria)
 VALUES ('Show', 'Apresentação musical ao vivo');
 
 INSERT INTO evento (titulo, dataHoraEvento, descricao, duracao, website, precoBase, imagens, CNPJ, nomeCategoriaEvento, nomeLocal, IDendereco)
@@ -383,9 +383,8 @@ INSERT INTO favorita (CPF, IDevento)
 VALUES ('21548631074', 1),
        ('98765432109', 1);
 	  
-	  
 -- Inserindo Dados PARTE 2: workshop sobre Banco de Dados
-INSERT INTO categoriaEvento (nomeCategoriaEvento, descricao)
+INSERT INTO categoriaEvento (nomeCategoriaEvento, descricaocategoria)
 VALUES ('Workshop', 'Workshop educacional sobre Banco de Dados');
 
 INSERT INTO organizador (CNPJ, nome, email, telefone)
@@ -555,7 +554,7 @@ VALUES ('Centro de Convenções', 1, 'Sala 1 - 2º Andar', 200),
 INSERT INTO organizador (CNPJ, nome, email, telefone)
 VALUES ('12345678901234', 'EventoTech', 'contato@eventotech.com', '53987654321');
 
-INSERT INTO categoriaEvento (nomeCategoriaEvento, descricao)
+INSERT INTO categoriaEvento (nomeCategoriaEvento, descricaocategoria)
 VALUES ('Palestra', 'Eventos de palestras e apresentações educacionais'),
        ('Concerto', 'Apresentações musicais ao vivo'),
        ('Exposição de Arte', 'Exibições de obras de arte e exposições');
