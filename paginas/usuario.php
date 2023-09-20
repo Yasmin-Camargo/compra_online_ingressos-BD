@@ -20,8 +20,8 @@
         <h1>TICKET VERSE</h1>
         <p>Desfrute de eventos exclusivos na nossa plataforma de compra online de ingresso</p>
         <div id="menu">
-            <form id="pesquisa-esquerda" action="/search" method="get">
-                <input type="text" name="q" placeholder="Digite um evento...">
+            <form id="pesquisa-esquerda" action="pesquisa.php" method="get">
+                <input type="text" name="busca" placeholder="Digite sua pesquisa...">
                 <button type="submit">Buscar </button>
             </form>
             <nav id="nav-direita">
