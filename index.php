@@ -26,7 +26,12 @@
             <nav id="nav-direita">
                 <a href="index.php" target="_self">Home</a>
                 <a href="paginas/descricao.php" target="_self">Descrição</a>
-                <a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>
+                <?php
+                    // Verifica se o usuário está logado (para mostrar seus ingressos)
+                    if ($_SESSION['usuario_login'] != NULL) {
+                        echo '<a href="../paginas/compra_ingressos.php" target="_self">Ingressos</a>';
+                    } 
+                ?>
                 <a href="../paginas/login_organizadores.php" target="_self">Organizadores</a>
                 <?php
                     // Verifica se o usuário está logado (para mostrar nome dele)
