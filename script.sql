@@ -1,4 +1,10 @@
-set search_path to plataformaCompraOnlineIngressos;
+-- Cria o banco de dados 'PlataformaIngressos' se ele não existir (CREATE DATABASE IF NOT EXISTS PlataformaIngressos)
+DO $$ 
+BEGIN
+   IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'PlataformaIngressos') THEN
+      CREATE DATABASE PlataformaIngressos;
+   END IF;
+END $$;
 
 -- Excluir o esquema e seus objetos
 DROP SCHEMA IF EXISTS plataformaCompraOnlineIngressos CASCADE;
@@ -261,14 +267,14 @@ CREATE TABLE ingresso(
 INSERT INTO redessociais (nome, linkSite)
 VALUES ('Instagram', 'https://www.instagram.com/ticketverse'),
        ('Youtube', 'https://www.youtube.com/ticketverse'),
-      ('Twitter', 'https://twitter.com/ticketverse');
+       ('Twitter', 'https://twitter.com/ticketverse');
 
 INSERT INTO plataforma (website, telefone, email, IDredesSociais)
 VALUES ('ticketverse.com', '97232317485', 'ticketverse@minhaplataforma.com', 1);
 
 INSERT INTO administrador (email, nome, senha, website)
-VALUES ('admin@dualipa.com', 'Admin', 'senha123', 'ticketverse.com'),
-  ('admin2@dualipa.com', 'Admin', 'senha456', 'ticketverse.com');
+VALUES  ('admin@dualipa.com', 'Admin', 'senha123', 'ticketverse.com'),
+        ('admin2@dualipa.com', 'Admin', 'senha456', 'ticketverse.com');
 
 INSERT INTO organizador (CNPJ, nome, email, telefone)
 VALUES ( '1321220000120', 'Empresa Rock In Rio', 'contato@rockInRio.com', '9876543210'),
@@ -313,38 +319,38 @@ VALUES  ('12345678901'),
 
 -- inserindo ingressos já com usuario
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 101, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 1, 'VIP';
+    SELECT 101, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 1, 'VIP';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 203, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 1, 2, 'Normal';
+    SELECT 203, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 1, 2, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 104, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 1, 'Meia Entrada';
+    SELECT 104, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 1, 'Meia Entrada';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 204, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 2, 2, 'Normal';
+    SELECT 204, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 2, 2, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 105, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 2, 1, 'Meia Entrada';
+    SELECT 105, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 2, 1, 'Meia Entrada';
 
 -- ingressos sem usuário
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 0, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
+    SELECT 0, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 1, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 'Meia Entrada';
+    SELECT 1, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 'Meia Entrada';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 2, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
+    SELECT 2, (SELECT precobase FROM evento WHERE idevento = 1) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 0, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 1, 'Normal';
+    SELECT 0, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 1, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 1, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 'Meia Entrada';
+    SELECT 1, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Meia Entrada'), 1, 'Meia Entrada';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 2, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
+    SELECT 2, (SELECT precobase FROM evento WHERE idevento = 2) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'VIP'), 1, 'VIP';
 
 -- aloca um ingresso para um usuário
 UPDATE ingresso
@@ -447,67 +453,67 @@ VALUES ('00115522447', 3),
        ('99227744883', 3);
 	   
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 1, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 6, 'Normal';
+    SELECT 1, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 6, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 2, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 7, 'Gratis';
+    SELECT 2, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 7, 'Gratis';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 3, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 8, 'Normal';
+    SELECT 3, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 8, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 10, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 9, 'Gratis';
+    SELECT 10, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 9, 'Gratis';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 4, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 10, 'Gratis';
+    SELECT 4, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 10, 'Gratis';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 5, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 11, 'Normal';
+    SELECT 5, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 11, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 6, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 12, 'Normal';
+    SELECT 6, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 12, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 7, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 13, 'Normal';
+    SELECT 7, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 13, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 8, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 14, 'Normal';
+    SELECT 8, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 14, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, idcarrinhocompras, nomecategoriaingresso)
-SELECT 9, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 15, 'Normal';
+    SELECT 9, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 15, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 11, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 11, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 12, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 12, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 13, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 13, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 14, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 14, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 15, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 15, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 16, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 16, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 17, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 17, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 18, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 18, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 19, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 19, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO ingresso (numassento, preco, idevento, nomecategoriaingresso)
-SELECT 20, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
+    SELECT 20, (SELECT precobase FROM evento WHERE idevento = 3) * (SELECT desconto FROM categoriaingresso WHERE nomecategoriaingresso = 'Normal'), 3, 'Normal';
 
 INSERT INTO compra (notafiscal, valorfinal, idcarrinhocompras, codigodesconto)
-SELECT 'NF2023004', 
+    SELECT 'NF2023004', 
        (SELECT SUM(preco) FROM ingresso WHERE idcarrinhocompras = 6) * 
        (1 - (SELECT percentualDesconto FROM cupomdesconto WHERE codigodesconto = 'EstudanteUFPEL')),
        6, 'EstudanteUFPEL';
@@ -515,7 +521,7 @@ INSERT INTO pagamento(notafiscal) VALUES('NF2023004');
 INSERT INTO pix(codigopix, idpagamento) VALUES('chave-pix-1234567891', 4);
 
 INSERT INTO compra (notafiscal, valorfinal, idcarrinhocompras, codigodesconto)
-SELECT 'NF2023005', 
+    SELECT 'NF2023005', 
        (SELECT SUM(preco) FROM ingresso WHERE idcarrinhocompras = 8) * 
        (1 - (SELECT percentualDesconto FROM cupomdesconto WHERE codigodesconto = 'EstudanteUFSM')),
        8, 'EstudanteUFSM';
@@ -523,7 +529,7 @@ INSERT INTO pagamento(notafiscal) VALUES('NF2023005');
 INSERT INTO pix(codigopix, idpagamento) VALUES('chave-pix-1234567892', 5);
 
 INSERT INTO compra (notafiscal, valorfinal, idcarrinhocompras, codigodesconto)
-SELECT 'NF2023006', 
+    SELECT 'NF2023006', 
        (SELECT SUM(preco) FROM ingresso WHERE idcarrinhocompras = 12) * 
        (1 - (SELECT percentualDesconto FROM cupomdesconto WHERE codigodesconto = 'EstudanteUFPEL')),
        12, 'EstudanteUFPEL';
@@ -531,13 +537,13 @@ INSERT INTO pagamento(notafiscal) VALUES('NF2023006');
 INSERT INTO boleto (codigobarras, idpagamento) VALUES ('1234567891', 6);
 
 INSERT INTO compra (notafiscal, valorfinal, idcarrinhocompras)
-SELECT 'NF2023007', 
+    SELECT 'NF2023007', 
        (SELECT SUM(preco) FROM ingresso WHERE idcarrinhocompras = 15), 15;
 INSERT INTO pagamento(notafiscal) VALUES('NF2023007');
 INSERT INTO cartao (numerocartao, nome, datavencimento, cvv, idpagamento) VALUES ('917823398', 'Fulano', '2024-06-11', 487, 7);
   
 INSERT INTO compra (notafiscal, valorfinal, idcarrinhocompras)
-SELECT 'NF2023008', 
+    SELECT 'NF2023008', 
        (SELECT SUM(preco) FROM ingresso WHERE idcarrinhocompras = 13), 13;
 INSERT INTO pagamento(notafiscal) VALUES('NF2023008');
 INSERT INTO pix(codigopix, idpagamento) VALUES('chave-pix-1234567893', 8);

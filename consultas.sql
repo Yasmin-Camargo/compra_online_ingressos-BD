@@ -47,19 +47,17 @@ WHERE cpf = '25478963451' AND usuario.idendereco = endereco.idendereco;
 -- Recuperar informações detalhadas sobre compras de ingressos (compra_ingressos)
 SELECT usuario.nome, usuario.cpf,
 	compra.notaFiscal, compra.valorfinal, compra.datahoracompra,
-	evento.titulo, 
+    evento.titulo, evento.descricao, evento.precobase,
+    localevento.nomelocal,
 	ingresso.idingresso, ingresso.preco, ingresso.numassento,
 	categoriaingresso.nomecategoriaingresso, categoriaingresso.desconto,
-	cupomdesconto.codigodesconto, cupomdesconto.percentualdesconto,
-	evento.titulo,
-	evento.descricao,
-	localevento.nomelocal
+	cupomdesconto.codigodesconto, cupomdesconto.percentualdesconto
 FROM plataformaCompraOnlineIngressos.usuario JOIN plataformaCompraOnlineIngressos.carrinhocompras ON usuario.cpf = carrinhocompras.cpf
     JOIN plataformaCompraOnlineIngressos.ingresso ON carrinhocompras.idcarrinhocompras = ingresso.idcarrinhocompras
     JOIN plataformaCompraOnlineIngressos.evento ON ingresso.idevento = evento.idevento
     JOIN plataformaCompraOnlineIngressos.categoriaingresso ON  ingresso.nomecategoriaingresso = categoriaingresso.nomecategoriaingresso
     JOIN plataformaCompraOnlineIngressos.compra ON carrinhocompras.idcarrinhocompras = compra.idcarrinhocompras
-    JOIN plataformaCompraOnlineIngressos.cupomdesconto ON compra.codigodesconto = cupomdesconto.codigoDesconto
+    LEFT JOIN plataformaCompraOnlineIngressos.cupomdesconto ON compra.codigodesconto = cupomdesconto.codigoDesconto
     JOIN plataformaCompraOnlineIngressos.localevento ON evento.nomelocal = localevento.nomelocal
     JOIN plataformaCompraOnlineIngressos.endereco ON endereco.idendereco = localevento.idendereco
 ORDER BY nome;
@@ -124,7 +122,7 @@ WHERE organizador.cnpj = '12345678901234';
 -- Consultar informações de um organizador (login_organizadores)
 SELECT cnpj, email, telefone, nome
 FROM plataformaCompraOnlineIngressos.organizador 
-WHERE cnpj = '12345678901234'
+WHERE cnpj = '12345678901234';
 
 -- Filtrar evento por  titulo
 SELECT titulo
